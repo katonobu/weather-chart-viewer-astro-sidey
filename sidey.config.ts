@@ -32,9 +32,9 @@ export const sideyConfig = {
    */
   navigation: [
     { label: "Home", href: "/" },
-    { label: "Writings", href: "/writings" },
-    { label: "About", href: "/about" },
-    { label: "RSS", href: "/rss.xml" },
+    { label: "直近1週間のデータ", href: "/recent" },
+    { label: "アーカイブ", href: "/archive" },
+    { label: "このサイトについて", href: "/about" },
   ],
 }
 
