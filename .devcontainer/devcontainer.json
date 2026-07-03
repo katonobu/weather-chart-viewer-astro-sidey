@@ -1,0 +1,6 @@
+{
+  "name": "aws-infra-frontend Python CDK",
+  "image": "mcr.microsoft.com/devcontainers/universal:linux",
+	"postCreateCommand": "bash .devcontainer/post_create.sh",
+	"postStartCommand": "bash .devcontainer/post_start.sh"
+}
