@@ -2,7 +2,8 @@
 
 // S3のバケットURL（環境に合わせて変更してください）
 const S3_DOMAIN = "d1xdqsn7je8bay.cloudfront.net"
-export const S3_BASE_URL = `https://${S3_DOMAIN}/shared/services/weatherchart`;
+export const SERVICE_BASE_URL = `https://${S3_DOMAIN}`;
+export const CONTENTS_BASE_URL = `https://${S3_DOMAIN}/shared/services/weatherchart`;
 
 
 let dirlistCache:string[]|null = null
@@ -12,7 +13,7 @@ let dirlistCache:string[]|null = null
  */
 export async function getDirectoryList(): Promise<string[]|null> {
   if (dirlistCache === null) {
-    const response = await fetch(`${S3_BASE_URL}/directory_list.json`);
+    const response = await fetch(`${CONTENTS_BASE_URL}/directory_list.json`);
     if (!response.ok) throw new Error("Failed to fetch directory list");
     dirlistCache = await response.json();
   }
@@ -23,7 +24,7 @@ export async function getDirectoryList(): Promise<string[]|null> {
  * 特定IDの詳細メタデータを取得 (詳細ページ用)
  */
 export async function getDetailData(id: string) {
-  const response = await fetch(`${S3_BASE_URL}/${id}/metadata_detail.json`);
+  const response = await fetch(`${CONTENTS_BASE_URL}/${id}/metadata_detail.json`);
   if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
   return await response.json();
 }

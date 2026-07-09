@@ -10,10 +10,13 @@ import Lightbox from "@components/layout/Lightbox.astro"
 interface Props {
   title: string
   description: string
-  image?: string
+  image?: string,
+  maxWidth?:string,
+  skipSideBar?:boolean
 }
 
-const { title, description, image } = Astro.props
+const { title, description, image, maxWidth = "max-w-3xl" , skipSideBar = false} = Astro.props
+console.log(skipSideBar)
 ---
 
 <!doctype html>
@@ -24,9 +27,9 @@ const { title, description, image } = Astro.props
 
   <body class="antialiased">
     <div
-      class="mx-auto flex min-h-svh w-full max-w-3xl flex-col px-4 sm:min-h-screen md:grid md:grid-cols-[1fr_4fr] md:gap-8 md:px-8 md:pr-8"
+      class={`mx-auto flex min-h-svh w-full ${maxWidth} flex-col px-4 sm:min-h-screen md:gap-8 md:px-8 md:pr-8 ${skipSideBar ? '':'md:grid md:grid-cols-[1fr_4fr]'}`}
     >
-      <Sidebar />
+    {!skipSideBar && <Sidebar />}
 
       <div class="flex min-w-0 grow animate-slide-in flex-col py-8 md:mt-8">
         <main class="grow">

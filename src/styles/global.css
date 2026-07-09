@@ -265,6 +265,10 @@
   --color-important: var(--important);
 
   --color-lightbox-bg: var(--flexoki-base-900);
+
+/* 追加 */
+  --color-white: #ffffff;  
+  --color-blue-500: #205EA6; /* 使用したい青色を定義 */
 }
 
 @layer base {

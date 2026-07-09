@@ -7,7 +7,9 @@
   },
   "scripts": {
     "dev": "astro dev --host",
+    "dev-all": "NEW_ENTRY_ID=ALL astro dev --host",
     "build": "astro build",
+    "build-all": "NEW_ENTRY_ID=ALL astro build",
     "preview": "astro preview --host",
     "astro": "astro"
   },

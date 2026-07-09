@@ -1,7 +1,7 @@
 ---
 // src/pages/view/[id].astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getDetailData, getStaticPathsByTargetId, S3_BASE_URL } from '../../utils/s3';
+import { getDetailData, getStaticPathsByTargetId, CONTENTS_BASE_URL, SERVICE_BASE_URL} from '../../utils/s3';
 
 export async function getStaticPaths() {
   // 環境変数から ID を取得して生成
@@ -14,23 +14,62 @@ const data = await getDetailData(id!);
 
 ---
 
-<BaseLayout title={data.title}, description={data.released_at_j}>
+<BaseLayout title={data.title}, description={data.released_at_j}, maxWidth="max-w-none", skipSideBar={true}>
   <div class="weather-header">
-    <h1>{data.title}</h1>
+    <h1 id="top">{data.title}</h1>
     <p class="release-date">{data.released_at_j}</p>
+  </div>
+  <a
+    href="/recent"
+    class="text-blue-500 hover:underline inline-flex items-center gap-1"
+  >
+    直近一週間
+  </a>の目次へ
+  <br>
+  <a
+    href="/archive"
+    class="text-blue-500 hover:underline inline-flex items-center gap-1"
+  >
+    アーカイブ
+  </a>の目次へ
+
+  <h2>ページ内リンク</h2>
+  <div>
+      <ul class="list-disc text-wrap px-10">
+      {
+          data.files.map((file:any) => (
+              <li ><a href={`#${file.id}`} class="text-blue-500 hover:underline">{file.title}</a></li>
+          ))
+      }
+      </ul>
   </div>
 
   <div class="weather-content">
     {data.files.map((file: any) => (
       <section id={file.id} class="weather-section">
-        <h2>{file.title}</h2>
-        <div class="image-wrapper">
+        <a
+            href={`${CONTENTS_BASE_URL}/${id}/${file.name}`}
+            target="_blank"
+            id={file.id}
+            class="text-blue-500 hover:underline inline-flex items-center gap-1"
+        >
+            <h2>{file.title}</h2>
+            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true">
+                <path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path>
+            </svg>
+        </a>
+
+        <div class="w-full overflow-x-auto bg-white border border-gray-100">
           <img 
-            src={`${S3_BASE_URL}/${id}/${file.name}`} 
+            src={`${CONTENTS_BASE_URL}/${id}/${file.name}`} 
             alt={file.title} 
             loading="lazy" 
+            class="w-full h-auto"
           />
-        </div>
+        </div>        
+        <a href="#top" class="text-blue-500 hover:underline">
+          ページの先頭へ
+        </a>
       </section>
     ))}
   </div>
