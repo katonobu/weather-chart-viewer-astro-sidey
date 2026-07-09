@@ -1,56 +1,32 @@
 ---
-// src/pages/recent.astro
+// src/pages/archive.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
+import {getDirectoryList} from "../utils/s3";
+
+// 1週間より古い情報一覧を取得
+const list = await getDirectoryList()
+const archiveList = list?list.slice(14):[]
+
 ---
 
 <BaseLayout title="保存されている天気図一覧", description="保存されている気象データを表示するページです。">
     <h1>保存されている天気図</h1>
-    <p>保存されている気象データを読み込んでいます...</p>
 
-    <ul id="weather-list" class="weather-list"></ul>
-</BaseLayout>
-
-<script>
-    // ブラウザ側で実行されるスクリプト
-    async function fetchAndRenderList() {
-        const listElement = document.getElementById("weather-list");
-        if (!listElement) return;
-
-        try {
-            /*
-            const response = await fetch(
-                "https://d1xdqsn7je8bay.cloudfront.net/shared/services/weatherchart/directory_list.json",
-            );
-            */
-            const response = await fetch('/api/weather/shared/services/weatherchart/directory_list.json');                
-            const list = await response.json(); // ['20260703_1540', '20260703_0000', ...]
-
-            // 全部を表示
-            const recentList = list
-
-            listElement.innerHTML = recentList
-                .map(
-                    (id) => `
-        <li class="weather-item">
-          <a href="/view/${id}">
-            <h3>${id.replace("_", " ")}</h3>
-          </a>
-        </li>
-      `,
+    <ul id="weather-list" class="weather-list">
+        {
+            archiveList.map((id:string) => {
+                console.log(id)
+                return (
+                    <li class="weather-item">
+                        <a href={`/view/${id}`}>
+                            <h3>{id.slice(0,4)}年{id.slice(4,6)}月{id.slice(6,8)}日 {id.slice(9,11)}時{id.slice(11,13)}分 発表</h3>
+                        </a>
+                    </li>
                 )
-                .join("");
-
-            document.querySelector("p").textContent =
-                "保存されているデータを表示しています。";
-        } catch (e) {
-            document.querySelector("p").textContent =
-                "データの読み込みに失敗しました。";
-            console.error(e);
+            })
         }
-    }
-
-    fetchAndRenderList();
-</script>
+    </ul>
+</BaseLayout>
 
 <style>
     .weather-list {

@@ -1,22 +1,17 @@
 ---
 // src/pages/view/[id].astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getDetailData } from '../../utils/s3';
+import { getDetailData, getStaticPathsByTargetId, S3_BASE_URL } from '../../utils/s3';
 
 export async function getStaticPaths() {
-  // 環境変数から ID を取得して生成（指定がない場合はビルドが空になる安全設計）
-  const targetId = process.env.NEW_ENTRY_ID || "20260703_1540"
-  if (targetId) {
-    return [{ params: { id: targetId } }];
-  }
-  return [];
+  // 環境変数から ID を取得して生成
+  const targetId = process.env.NEW_ENTRY_ID || ""
+  return getStaticPathsByTargetId(targetId)
 }
 
 const { id } = Astro.params;
 const data = await getDetailData(id!);
 
-// S3のバケットURL（環境に合わせて変更してください）
-const S3_BASE_URL = "https://d1xdqsn7je8bay.cloudfront.net/shared/services/weatherchart";
 ---
 
 <BaseLayout title={data.title}, description={data.released_at_j}>

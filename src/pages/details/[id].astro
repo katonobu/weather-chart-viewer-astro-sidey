@@ -1,12 +1,12 @@
 ---
 // src/pages/details/[id].astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getDetailData } from '../../utils/s3';
+import { getDetailData, getStaticPathsByTargetId, S3_BASE_URL } from '../../utils/s3';
 
 export async function getStaticPaths() {
-//  const targetId = process.env.NEW_ENTRY_ID;
-  const targetId = process.env.NEW_ENTRY_ID || "20260703_1540"
-  return targetId ? [{ params: { id: targetId } }] : [];
+  // 環境変数から ID を取得して生成
+  const targetId = process.env.NEW_ENTRY_ID || ""
+  return getStaticPathsByTargetId(targetId)
 }
 
 const { id } = Astro.params;
@@ -35,16 +35,13 @@ const data = await getDetailData(id!);
           <li><strong>ファイルサイズ:</strong> {(file.size / 1024).toFixed(2)} KB</li>
         </ul>
       </section>
+      <a href={`/view/${id}`}>← 天気図ページに戻る</a>
     ))}
   </div>
-
-  <footer style="margin-top: 2rem;">
-    <a href={`/view/${id}`}>← 天気図ページに戻る</a>
-  </footer>
 </BaseLayout>
 
 <style>
-  .file-metadata { margin-bottom: 2rem; padding: 1rem; border: 1px solid #eee; border-radius: 8px; }
+  .file-metadata { margin: 1rem; padding: 1rem; border: 1px solid #eee; border-radius: 8px; }
   h2 { font-size: 1.2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; }
   ul { list-style: none; padding-left: 0; }
   li { margin-bottom: 0.5rem; }

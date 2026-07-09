@@ -8,20 +8,20 @@ export const sideyConfig = {
    * and structural header components across the template.
    */
   site: {
-    // The main title displayed in browser tabs and search engine results
-    title: "Astro Sidey",
+    // ブラウザタブや検索結果に表示されるタイトル
+    title: "気象庁 短期予報解説資料 / 関連天気図・衛星画像 | katonobu",
 
-    // A short fallback summary of your site used for SEO and social share cards
-    description: "A minimal, content-focused Astro theme for personal sites.",
+    // SEO・SNSカードに使われる短い説明文
+    description: "気象庁が一日2回発表している短期予報解説資料と、その時刻に対応する関連天気図・衛星画像データを発表毎にまとめたページ。",
 
-    // The production domain where your site is deployed (no trailing slash)
-    url: "https://sidey.odhyp.com",
+    // 公開する本番URL（GitHub Pages / CloudFront / Vercel など）
+    url: "https://weatherchart.office-katonobu.com",
 
-    // Your name, utilized in copyright strings and author meta tags
-    author: "Odhy Pradhana",
+    // 著者名（著作権表記やmetaタグに使用）
+    author: "katonobu",
 
-    // The primary language attribute for HTML accessibility engines (e.g., "en", "id")
-    locale: "en",
+    // HTML の lang 属性（日本語サイトなら "ja"）
+    locale: "ja",
   },
 
   /**
@@ -32,9 +32,9 @@ export const sideyConfig = {
    */
   navigation: [
     { label: "Home", href: "/" },
-    { label: "直近1週間のデータ", href: "/recent" },
-    { label: "アーカイブ", href: "/archive" },
-    { label: "このサイトについて", href: "/about" },
+    { label: "Recent", href: "/recent" },
+    { label: "Archive", href: "/archive" },
+    { label: "About", href: "/about" },
   ],
 }
 
