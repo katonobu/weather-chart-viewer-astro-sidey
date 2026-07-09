@@ -1,0 +1,32 @@
+---
+// src/components/layout/Glightbox.astro
+---
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<style is:global>
+  /* ここで直接指定することで、外部CSSより確実に上書きします */
+  .glightbox-container .goverlay {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+  .glightbox-container .gslide-media {
+    background: #ffffff !important;
+  }
+</style>
+<script is:inline src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+<script is:inline>
+  // astro:page-load を使用して、ページ遷移後も確実に実行されるようにする
+  document.addEventListener('astro:page-load', () => {
+    // 既に初期化済みの場合は一度破棄する（重複防止）
+    const existingLightbox = document.querySelector('.glightbox-container');
+    if (existingLightbox) existingLightbox.remove();
+
+    const lightbox = GLightbox({
+      selector: '[data-glightbox="true"]',
+      touchNavigation: true,
+      zoomable: true,
+      draggable: true,
+      openEffect: 'fade',
+      closeEffect: 'fade',
+    });
+  });
+</script>

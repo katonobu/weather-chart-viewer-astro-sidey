@@ -15,7 +15,6 @@ const recentList = list?list.slice(0, 14):[]
     <ul id="weather-list" class="weather-list">
         {
             recentList.map((id:string) => {
-                console.log(id)
                 return (
                     <li class="weather-item">
                         <a href={`/view/${id}`}>

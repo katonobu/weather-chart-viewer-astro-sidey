@@ -16,7 +16,6 @@ interface Props {
 }
 
 const { title, description, image, maxWidth = "max-w-3xl" , skipSideBar = false} = Astro.props
-console.log(skipSideBar)
 ---
 
 <!doctype html>
@@ -37,9 +36,10 @@ console.log(skipSideBar)
         </main>
 
         <Footer />
+        {skipSideBar?<div class="pb-24"></div>:null}
       </div>
     </div>
-
+    <slot name="player" />
     <Lightbox />
   </body>
 </html>

@@ -40,3 +40,35 @@ export async function getStaticPathsByTargetId(targetId:string) {
   }
 }
 
+type KaisetsuItem = {
+  name: string,
+  sentences: string[]
+}
+
+export async function getKaisetsu(id: string): Promise<string[]> {
+  const response = await fetch(`${CONTENTS_BASE_URL}/${id}/kaisetsu_tanki.json`);
+  if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
+  const data = await response.json()
+
+  const tracks = []
+  tracks.push([
+    data[0].name,
+    data[0].sentences[0]
+  ].join("\n"))
+  tracks.push(data[1].name)
+  data[1].subsections.forEach((item:KaisetsuItem) => {
+    const texts = []
+    texts.push(item.name)
+    item.sentences.forEach((sentence:string) => texts.push(sentence))
+    tracks.push(texts.join("\n"))
+  })
+  tracks.push(data[2].name)
+  data[2].subsections.forEach((item:KaisetsuItem) => {
+    const texts =[]
+    texts.push(item.name)
+    item.sentences.forEach((sentence:string) => texts.push(sentence))
+    tracks.push(texts.join("\n"))
+  })
+
+  return tracks
+}

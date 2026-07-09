@@ -1,6 +1,7 @@
 ---
 // src/pages/details/[id].astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prose from "@components/common/Prose.astro"
 import { getDetailData, getStaticPathsByTargetId, CONTENTS_BASE_URL } from '../../utils/s3';
 
 export async function getStaticPaths() {
@@ -14,6 +15,7 @@ const data = await getDetailData(id!);
 ---
 
 <BaseLayout title={"詳細情報"}, description={data.title}>
+  <Prose>
   <h1>{data.title} のメタデータ詳細</h1>
   <p><strong>発表日時:</strong> {data.released_at_j}</p>
 
@@ -38,6 +40,7 @@ const data = await getDetailData(id!);
       <a href={`/view/${id}`}>← 天気図ページに戻る</a>
     ))}
   </div>
+  </Prose>
 </BaseLayout>
 
 <style>
