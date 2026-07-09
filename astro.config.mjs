@@ -21,12 +21,14 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings"
 // Sidey Config
 import { sideyConfig } from "./sidey.config.ts"
 
+import react from "@astrojs/react";
+
 // https://astro.build/config
 export default defineConfig({
   devToolbar: {
     enabled: false,
   },
-  integrations: [astroExpressiveCode(), mdx(), icon(), sitemap()],
+  integrations: [astroExpressiveCode(), mdx(), icon(), sitemap(), react()],
   markdown: {
     processor: unified({
       remarkPlugins: [remarkReadingTime],
