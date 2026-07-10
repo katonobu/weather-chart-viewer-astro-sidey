@@ -46,6 +46,8 @@ jobs:
           echo "inputs.stage:${{inputs.stage}}"
           if [ "${{ github.event_name }}" = "push" ]; then
             echo "STAGE=dev" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "STAGE=${{ github.event.inputs.stage }}" >> $GITHUB_ENV
           else
             echo "STAGE=${{ inputs.stage }}" >> $GITHUB_ENV
           fi
