@@ -19,6 +19,13 @@ on:
 #    branches:
 #      - main
 
+  # 値は使わないが受け口がないと呼び出されない。
+  workflow_call:
+    inputs:
+      stage:
+        required: true
+        type: string
+
 env:
   SERVICE: weatherchart
   AWS_REGION: ap-northeast-1
