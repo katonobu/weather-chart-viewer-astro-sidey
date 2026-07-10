@@ -63,13 +63,6 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     server: {
-      proxy: {
-        '/api/weather': {
-          target: 'https://d1xdqsn7je8bay.cloudfront.net',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/weather/, ''),
-        },
-      },
       watch: {
         usePolling: true,
       },
