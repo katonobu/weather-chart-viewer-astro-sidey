@@ -43,7 +43,7 @@ jobs:
       - name: Build Astro
         run: |
           npm install
-          npm run build-${{ env.STAGE }}
+          NEW_ENTRY_ID=ALL npm run build-${{ env.STAGE }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
