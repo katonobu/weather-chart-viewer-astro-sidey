@@ -18,12 +18,14 @@ on:
   workflow_call:
 
   # mainに対するpush ⇒ devで実行
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
 
 env:
-  STAGE: ${{ github.event_name == 'workflow_call' && 'prd' || github.event_name == 'push' && 'dev' || github.event.inputs.stage }}
+  EVENT: ${{ github.event_name }}
+  INPUT_STAGE: ${{ github.event.inputs.stage }}
+  STAGE: ${{ env.EVENT == 'workflow_call' && 'prd' || env.EVENT == 'push' && 'dev' || env.INPUT_STAGE }}
   SERVICE: weatherchart
   AWS_REGION: ap-northeast-1
 
