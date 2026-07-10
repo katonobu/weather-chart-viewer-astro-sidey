@@ -14,13 +14,6 @@ on:
           - stg
           - prd
 
-  # スクレイピング後に呼ばれる場合 ⇒ 呼び出し側でdev/stg/prdのいずれかを指定
-  workflow_call:
-    inputs:
-      stage:
-        required: true
-        type: string  
-
   # mainに対するpush ⇒ devで実行
 #  push:
 #    branches:
@@ -46,7 +39,7 @@ jobs:
           if [ "${{ github.event_name }}" = "push" ]; then
             echo "STAGE=dev" >> $GITHUB_ENV
           else
-            echo "STAGE=${{ github.event.inputs.stage }}" >> $GITHUB_ENV
+            echo "STAGE=${{ inputs.stage }}" >> $GITHUB_ENV
           fi
 
       - name: Display service,STAGE
