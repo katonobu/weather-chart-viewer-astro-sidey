@@ -23,11 +23,7 @@ on:
       - main
 
 env:
-  STAGE: ${{ 
-    github.event_name == 'workflow_call' && 'prd' ||
-    github.event_name == 'push' && 'dev' ||
-    github.event.inputs.stage
-  }}
+  STAGE: ${{ github.event_name == 'workflow_call' && 'prd' || github.event_name == 'push' && 'dev' || github.event.inputs.stage }}
   SERVICE: weatherchart
   AWS_REGION: ap-northeast-1
 
