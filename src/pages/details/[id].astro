@@ -2,7 +2,7 @@
 // src/pages/details/[id].astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Prose from "@components/common/Prose.astro"
-import { getDetailData, getStaticPathsByTargetId, CONTENTS_BASE_URL } from '../../utils/s3';
+import { getDetailData, getStaticPathsByTargetId } from '../../utils/s3';
 
 export async function getStaticPaths() {
   // 環境変数から ID を取得して生成
