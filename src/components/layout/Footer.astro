@@ -14,10 +14,21 @@ function getFormattedNow() {
   return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }
 
+// 環境変数の取得
+const envTarget = import.meta.env.VITE_ENV || 'dev';
+
+// ステージ名の変換ロジック
+const envTargetMap: Record<string, string> = {
+  prd: " ",
+  stg: "（ステージング環境）",
+  dev: "（開発環境）"
+};
+const envTargetStr = envTargetMap[envTarget] || `（不明環境:${envTarget}）`;
+
 ---
 
 <footer
   class="mt-4 inline-flex items-baseline justify-between gap-x-4 pt-8 text-xs text-muted-foreground sm:text-sm"
 >
-  <p class="text-xs">© {new Date().getFullYear()} katonobu. All rights reserved. Build at {getFormattedNow()}</p>
+  <p class="text-xs">© {new Date().getFullYear()} katonobu. All rights reserved. Build at {getFormattedNow()} {envTargetStr}</p>
 </footer>
