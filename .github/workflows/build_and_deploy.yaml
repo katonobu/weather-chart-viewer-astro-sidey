@@ -37,6 +37,7 @@ jobs:
     steps:
       - name: Set STAGE
         run: |
+          echo "EventName: ${{ github.event_name }}"
           if [ "${{ github.event_name }}" = "workflow_call" ]; then
             echo "STAGE=prd" >> $GITHUB_ENV
           elif [ "${{ github.event_name }}" = "push" ]; then
