@@ -11,11 +11,10 @@ interface Props {
   title: string
   description: string
   image?: string,
-  maxWidth?:string,
-  skipSideBar?:boolean
+  addPaddingBottom?:boolean
 }
 
-const { title, description, image, maxWidth = "max-w-3xl" , skipSideBar = false} = Astro.props
+const { title, description, image, addPaddingBottom = false} = Astro.props
 ---
 
 <!doctype html>
@@ -26,17 +25,16 @@ const { title, description, image, maxWidth = "max-w-3xl" , skipSideBar = false}
 
   <body class="antialiased">
     <div
-      class={`mx-auto flex min-h-svh w-full ${maxWidth} flex-col px-4 sm:min-h-screen md:gap-8 md:px-8 md:pr-8 ${skipSideBar ? '':'md:grid md:grid-cols-[1fr_4fr]'}`}
+      class="mx-auto flex min-h-svh w-full max-w-3xl flex-col px-4 sm:min-h-screen md:gap-8 md:px-8 md:pr-8 md:grid md:grid-cols-[1fr_4fr]"
     >
-    {!skipSideBar && <Sidebar />}
-
+      <Sidebar />
       <div class="flex min-w-0 grow animate-slide-in flex-col py-8 md:mt-8">
         <main class="grow">
           <slot />
         </main>
 
         <Footer />
-        {skipSideBar?<div class="pb-24"></div>:null}
+        {addPaddingBottom?<div class="pb-24"></div>:null}
       </div>
     </div>
     <slot name="player" />
