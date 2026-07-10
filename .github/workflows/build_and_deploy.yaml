@@ -1,6 +1,7 @@
 name: Build and Deploy
 
 on:
+  # 手動起動の時はDropDownから選択
   workflow_dispatch:
     inputs:
       stage:
@@ -13,12 +14,20 @@ on:
           - stg
           - prd
 
+  # スクレイピング後に呼ばれる場合 ⇒ prdで実行
+  workflow_call:
+
+  # mainに対するpush ⇒ devで実行
   push:
     branches:
       - main
 
 env:
-  STAGE: ${{ github.event_name == 'push' && 'dev' || github.event.inputs.stage }}
+  STAGE: ${{ 
+    github.event_name == 'workflow_call' && 'prd' ||
+    github.event_name == 'push' && 'dev' ||
+    github.event.inputs.stage
+  }}
   SERVICE: weatherchart
   AWS_REGION: ap-northeast-1
 
@@ -94,4 +103,4 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ env.DIST_ID }} \
-            --paths "/*" "/recent/*" "/archive/*"
+            --paths "/*" "/recent/*" "/archive/*" "/view/*" "/details/*"
