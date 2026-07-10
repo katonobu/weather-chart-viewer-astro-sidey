@@ -36,6 +36,7 @@ jobs:
         run: |
           echo "github.event_name:${{ github.event_name }}"
           echo "github.event.inputs.stage:${{github.event.inputs.stage}}"
+          echo "inputs.stage:${{inputs.stage}}"
           if [ "${{ github.event_name }}" = "push" ]; then
             echo "STAGE=dev" >> $GITHUB_ENV
           else
