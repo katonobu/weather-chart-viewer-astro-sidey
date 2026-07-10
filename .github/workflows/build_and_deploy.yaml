@@ -23,9 +23,6 @@ on:
 #      - main
 
 env:
-  EVENT: ${{ github.event_name }}
-  INPUT_STAGE: ${{ github.event.inputs.stage }}
-  STAGE: ${{ env.EVENT == 'workflow_call' && 'prd' || env.EVENT == 'push' && 'dev' || env.INPUT_STAGE }}
   SERVICE: weatherchart
   AWS_REGION: ap-northeast-1
 
@@ -38,6 +35,16 @@ jobs:
       contents: read
 
     steps:
+      - name: Set STAGE
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_call" ]; then
+            echo "STAGE=prd" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            echo "STAGE=dev" >> $GITHUB_ENV
+          else
+            echo "STAGE=${{ github.event.inputs.stage }}" >> $GITHUB_ENV
+          fi
+
       - name: Display service,STAGE
         run: |
           # 環境変数の表示
