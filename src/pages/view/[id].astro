@@ -5,10 +5,11 @@ import Prose from "@components/common/Prose.astro";
 import Glightbox from "@components/layout/Glightbox.astro";
 import { TextToSpeechCtrl } from "@/components/TextToSpeechCtrl";
 import {
+  getDirectoryList,
   getDetailData,
   getStaticPathsByTargetId,
   getKaisetsu,
-  CONTENTS_BASE_URL,
+  getContentsLinkUrl,
 } from "../../utils/s3";
 
 export async function getStaticPaths() {
@@ -17,37 +18,45 @@ export async function getStaticPaths() {
   return getStaticPathsByTargetId(targetId);
 }
 
+
 const { id } = Astro.params;
 const data = await getDetailData(id!);
+const dirList = (await getDirectoryList()) || []
+const currentIndex = dirList.indexOf(id)
+const newerId = 0 < currentIndex ? dirList[currentIndex-1] : null
+const olderId = currentIndex < dirList.length - 1 ? dirList[currentIndex+1] : null
+
+// console.log(newerId, olderId)
 
 // 解説資料読み上げ用データ
 const kaisetsuTexts = await getKaisetsu(id);
+const CONTENTS_LINK_URL = getContentsLinkUrl()
 ---
 
-<BaseLayout title={data.title} , description={data.released_at_j}>
+<BaseLayout title={data.title} , description={data.released_at_j}, addPaddingBottom={true}>
   <Prose>
     <div>
-      <div class="weather-header">
+      <div>
         <h1 id="top">{data.title}</h1>
-        <p class="release-date">{data.released_at_j}</p>
+        <p>{data.released_at_j}</p>
       </div>
-      <a href="/recent" class="hover:underline inline-flex items-center gap-1">
-        直近一週間
-      </a>の目次へ
-      <br />
-      <a href="/archive" class="hover:underline inline-flex items-center gap-1">
-        アーカイブ
-      </a>の目次へ
+      <a href={`/view/${newerId}`}>
+        {newerId?"＜＜":""}
+      </a>
+      <span> 前後のデータ </span>
+      <a href={`/view/${olderId}`}>
+        {olderId?"＞＞":""}
+      </a>
       <br />
       <a href={`/details/${id}`}> データ詳細情報 </a>へ
 
       <h2>ページ内リンク</h2>
       <div>
-        <ul class="list-disc text-wrap px-10">
+        <ul>
           {
             data.files.map((file: any) => (
               <li>
-                <a href={`#${file.id}`} class="hover:underline">
+                <a href={`#${file.id}`}>
                   {file.title}
                 </a>
               </li>
@@ -56,14 +65,15 @@ const kaisetsuTexts = await getKaisetsu(id);
         </ul>
       </div>
 
-      <div class="weather-content">
+      <div>
         {
           data.files.map((file: any) => (
-            <section id={file.id} class="weather-section">
+            <section id={file.id}>
               <a
-                href={`${CONTENTS_BASE_URL}/${id}/${file.name}`}
+                href={`${CONTENTS_LINK_URL}/${id}/${file.name}`}
                 target="_blank"
                 id={file.id}
+                class="heading-link"
               >
                 <h2>{file.title}</h2>
                 <svg
@@ -77,10 +87,16 @@ const kaisetsuTexts = await getKaisetsu(id);
                   <path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z" />
                 </svg>
               </a>
-
+              <a href={`/view/${newerId}#${file.id}`}>
+                {newerId?"＜＜":""}
+              </a>
+              <span> 前後のデータ </span>
+              <a href={`/view/${olderId}#${file.id}`}>
+                {olderId?"＞＞":""}
+              </a>
               <div class="w-full overflow-x-auto bg-white border border-gray-100">
                 <img
-                  src={`${CONTENTS_BASE_URL}/${id}/${file.name}`}
+                  src={`${CONTENTS_LINK_URL}/${id}/${file.name}`}
                   alt={file.title}
                   loading="lazy"
                   class="w-full h-auto"
@@ -88,7 +104,7 @@ const kaisetsuTexts = await getKaisetsu(id);
                   data-title={file.title}
                 />
               </div>
-              <a href="#top" class="hover:underline">
+              <a href="#top">
                 ページの先頭へ
               </a>
             </section>
@@ -110,23 +126,24 @@ const kaisetsuTexts = await getKaisetsu(id);
 </BaseLayout>
 
 <style>
-  .weather-header {
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #333;
+  .heading-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
   }
-  .release-date {
-    font-weight: bold;
-    color: #555;
+
+  /* 他の h2 と同じ余白をそのまま使う */
+  .heading-link h2 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    line-height: 1.3;
   }
-  .weather-section {
-    margin-bottom: 3rem;
-  }
-  .image-wrapper {
-    width: 100%;
-    overflow-x: auto;
-  }
-  .image-wrapper img {
-    max-width: 100%;
-    height: auto;
+
+  /* SVG の位置を補正して中央揃えに見せる */
+  .heading-link svg {
+    display: block;
+    margin-top: 40px;   /* h2 の margin-top と揃える */
+    margin-bottom: 20px;/* h2 の margin-bottom と揃える */
   }
 </style>
