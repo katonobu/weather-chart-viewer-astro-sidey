@@ -47,9 +47,6 @@ const CONTENTS_LINK_URL = getContentsLinkUrl()
       <a href={`/view/${olderId}`}>
         {olderId?"＞＞":""}
       </a>
-      <br />
-      <a href={`/details/${id}`}> データ詳細情報 </a>へ
-
       <h2>ページ内リンク</h2>
       <div>
         <ul>
@@ -112,8 +109,16 @@ const CONTENTS_LINK_URL = getContentsLinkUrl()
         }
         <Glightbox />
       </div>
-
-      <a href={`/details/${id}`}>データ詳細情報へ</a>
+      <h2>データ情報</h2>
+      <a href="https://www.jma.go.jp/jma/index.html">
+        気象庁ホームページ
+      </a>のデータを加工して作成。
+      <br />
+      本サイトで引用している気象庁データの引用元URL及び加工方法詳細は
+      <a href="/datafetch"> 出典情報 </a>参照。
+      <br/>
+      本ページで参照した加工元データ詳細は
+      <a href={`/details/${id}`}> データ詳細情報 </a>参照。
     </div>
   </Prose>
 

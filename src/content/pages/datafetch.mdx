@@ -1,9 +1,101 @@
 ---
-title: "データ取得論理詳細ページ"
-description: "本サービスで取得している気象庁のデータ取得方法等を記載しています。"
+title: "出典情報ページ"
+description: "本サービスで引用している気象庁データの引用元URL及び加工方法概要を記載します。"
 ---
-## データ取得論理
-本サービスで使用している各種データの取得元、データ合成方法等を記載しています。
-各発表日時毎の詳細は、各天気図ページの「データ詳細情報 へ」のリンクから参照ください。
+## 出典情報
+[気象庁ホームページのコンテンツの利用について](https://www.jma.go.jp/jma/kishou/info/coment.html)に基づき、本サービスで引用している気象庁データの引用元URL及び加工方法概要を記載します。
 
-以下T.B.D.
+## 短期予報解説資料、及び関連データ
+- 短期予報解説資料
+  - [気象の専門家向け資料集](https://www.jma.go.jp/jma/kishou/know/expert/index.html)にある下記リンクよりpdfデータ取得。svgデータを抽出、表示。
+    - 短期予報解説資料 `https://www.data.jma.go.jp/yoho/data/jishin/kaisetsu_tanki_latest.pdf`
+- 実況天気図（アジア太平洋域）
+  - [過去の実況天気図（1日表示）](https://www.data.jma.go.jp/yoho/wxchart/quickdaily.html) にあるリンク相当の下記URLからsvgデータを取得、表示。
+    - 実況天気図（アジア太平洋域 `https://www.data.jma.go.jp/yoho/data/wxchart/quick/{%Y%m}/ASAS_MONO_{%Y%m%D%H%M}.svgz`
+- レーダー画像
+  - [雨雲の動き(軽量版)](https://www.jma.go.jp/bosai/rain/)の雨雲画像データ、輪郭データを取得、重ね合わせたファイルを生成、表示。
+    - 雨雲画像 `https://www.jma.go.jp/bosai/rain/data/rain/{%Y%m%D%H}0000/rain_{%Y%m%D%H}0000_f00_a00.png`
+    - 輪郭データ `https://www.jma.go.jp/bosai/rain/const/map/border_a00.png`
+- 可視画像
+  - [気象衛星ひまわり](https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=vis&contents=himawari)のタイルデータを取得、結合、表示。
+    - 取得URLの詳細は下記「ひまわり画像詳細」を参照。
+- 赤外画像
+  - [気象衛星ひまわり](https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=ir&contents=himawari)のタイルデータを取得、結合、表示。
+    - 取得URLの詳細は下記「ひまわり画像詳細」を参照。
+- 水蒸気画像
+  - [気象衛星ひまわり](https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=vap&contents=himawari)のタイルデータを取得、結合、表示。
+    - 取得URLの詳細は下記「ひまわり画像詳細」を参照。
+- カラー画像
+  - [気象衛星ひまわり](https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=color&contents=himawari)のタイルデータを取得、結合、表示。
+    - 取得URLの詳細は下記「ひまわり画像詳細」を参照。
+- 雲頂強調画像
+  - [気象衛星ひまわり](https://www.jma.go.jp/bosai/map.html#5/34.5/135.022/&elem=strengthen&contents=himawari)のタイルデータを取得、結合、表示。
+    - 取得URLの詳細は下記「ひまわり画像詳細」を参照。
+- アジア500hPa・300hPa高度・気温・風・等風速線天気図
+  - [高層天気図](https://www.jma.go.jp/bosai/numericmap/#type=upper)の`アジア500hPa・300hPa高度・気温・風・等風速線天気図(AUPQ35)`よりpdfデータ取得。svgデータを抽出、表示。
+    - AUPQ35 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/aupq35_{%Y%m%D%H}0000.pdf`
+- アジア850hPa・700hPa高度・気温・風・湿数天気図
+  - [高層天気図](https://www.jma.go.jp/bosai/numericmap/#type=upper)の`アジア850hPa・700hPa高度・気温・風・湿数天気図(AUPQ78)`よりpdfデータ取得。svgデータを抽出、表示。
+    - AUPQ35 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/aupq78_{%Y%m%D%H}0000.pdf`
+- 極東850hPa気温・風、700hPa上昇流／500hPa高度・渦度天気図
+  - [高層天気図](https://www.jma.go.jp/bosai/numericmap/#type=upper)の`極東850hPa気温・風、700hPa上昇流／500hPa高度・渦度天気図(AXFE578)`よりpdfデータ取得。svgデータを抽出、表示。
+    - AXFE578 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/axfe578_{%Y%m%D%H}0000.pdf`
+- 高層断面図（風・気温・露点等）東経130度／140度解析
+  - [高層天気図](https://www.jma.go.jp/bosai/numericmap/#type=upper)の`高層断面図（風・気温・露点等）東経130度／140度解析(AXJP130/AXJP140)`よりpdfデータ取得。svgデータを抽出、表示。
+    - AXJP130/AXJP140 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/axjp140_{%Y%m%D%H}0000.pdf`
+
+- アジア太平洋域 24時間
+  - [天気図](https://www.jma.go.jp/bosai/weather_map/)記載の`最新24時間予想図`リンクよりpdfデータ取得。svgデータを抽出、表示。
+    - アジア太平洋域 24時間 `https://www.data.jma.go.jp/yoho/data/wxchart/quick/FSAS24_MONO_ASIA.pdf`
+- アジア太平洋域 48時間
+  - [天気図](https://www.jma.go.jp/bosai/weather_map/)記載の`最新48時間予想図`リンクよりpdfデータ取得。svgデータを抽出、表示。
+    - アジア太平洋域 48時間 `https://www.data.jma.go.jp/yoho/data/wxchart/quick/FSAS48_MONO_ASIA.pdf`
+
+- 極東地上気圧・風・降水量／500hPa高度・渦度予想図 12・24時間
+  - [数値予報天気図](https://www.jma.go.jp/bosai/numericmap/#type=nwp)の`極東地上気圧・風・降水量／500hPa高度・渦度予想図 12・24時間(FXFE502)`よりpdfデータ取得。svgデータを抽出、表示。
+    - FXFE502 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/fxfe502_{%Y%m%D%H}0000.pdf`
+
+- 極東地上気圧・風・降水量／500hPa高度・渦度予想図 36・48時間
+  - [数値予報天気図](https://www.jma.go.jp/bosai/numericmap/#type=nwp)の`極東地上気圧・風・降水量／500hPa高度・渦度予想図 36・48時間(FXFE504)`よりpdfデータ取得。svgデータを抽出、表示。
+    - FXFE504 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/fxfe504_{%Y%m%D%H}0000.pdf`
+
+- 極東850hPa気温・風、700hPa上昇流／700hPa湿数、500hPa気温予想図 12・24時間
+  - [数値予報天気図](https://www.jma.go.jp/bosai/numericmap/#type=nwp)の`極東850hPa気温・風、700hPa上昇流／700hPa湿数、500hPa気温予想図 12・24時間(FXFE5782)`よりpdfデータ取得。svgデータを抽出、表示。
+    - FXFE5782 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/fxfe5782_{%Y%m%D%H}0000.pdf`
+
+- 極東850hPa気温・風、700hPa上昇流／700hPa湿数、500hPa気温予想図 36・48時間
+  - [数値予報天気図](https://www.jma.go.jp/bosai/numericmap/#type=nwp)の`極東850hPa気温・風、700hPa上昇流／700hPa湿数、500hPa気温予想図 36・48時間(FXFE5784)`よりpdfデータ取得。svgデータを抽出、表示。
+    - FXFE5784 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/fxfe5784_{%Y%m%D%H}0000.pdf`
+- 日本850hPa相当温位・風予想図 12・24・36・48時間
+  - [数値予報天気図](https://www.jma.go.jp/bosai/numericmap/#type=nwp)の`日本850hPa相当温位・風予想図 12・24・36・48時間(FXJP854)`よりpdfデータ取得。svgデータを抽出、表示。
+    - FXJP854 `https://www.jma.go.jp/bosai/numericmap/data/nwpmap/fxjp854_{%Y%m%D%H}0000.pdf`
+
+### ひまわり画像取得詳細
+- 各画像種別毎に、日本周辺のタイル画像を取得。
+- 輪郭データと各画像データを重ね合わせたファイルを生成、表示。 
+#### 各画像毎のURL
+- 可視画像
+  - `https://www.jma.go.jp/bosai/himawari/data/satimg/{utc_str}/fd/{utc_str}/B03/ALBD/5/{a}/{b}.jpg`
+- 赤外画像
+  - `https://www.jma.go.jp/bosai/himawari/data/satimg/{utc_str}/fd/{utc_str}/B13/TBB/5/{a}/{b}.jpg`
+- 水蒸気画像
+  - `https://www.jma.go.jp/bosai/himawari/data/satimg/{utc_str}/fd/{utc_str}/B08/TBB/5/{a}/{b}.jpg`
+- カラー画像
+  - `https://www.jma.go.jp/bosai/himawari/data/satimg/{utc_str}/fd/{utc_str}/REP/ETC/5/{a}/{b}.jpg`
+- 雲頂強調画像
+  - `https://www.jma.go.jp/bosai/himawari/data/satimg/{utc_str}/fd/{utc_str}/SND/ETC/5/{a}/{b}.jpg`
+
+#### 輪郭データのURL
+- 全画像共通で用いる輪郭データ
+  - `https://www.jma.go.jp/tile/jma/sat/5/{a}/{b}.png`
+
+#### 上記URL記載中のパラメータ
+- utc_str : 観測時刻をUTCで `{%Y%m%D%H%M}0000` 形式の文字列
+- a : 衛星画像のタイル座標X [25,...30]
+- b : 衛星画像のタイル座標Y [11,...14]
+
+
+# 表記の凡例
+- `{%Y%m%D%H%M}`はデータ観測年月日時分を示す
+- `{%Y%m%D%H}`はデータ観測年月日時を示す
+- `{%Y%m}`はデータ観測年月を示す
