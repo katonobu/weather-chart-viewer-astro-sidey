@@ -1,0 +1,16 @@
+---
+// src/components/LatestLink.astro
+import { getDirectoryList } from '../../utils/s3';
+
+// S3からの非同期取得は、Astroコンポーネント内であれば100%安全に実行できます
+const list = await getDirectoryList() || null
+const id = list===null?null:list[0]
+---
+
+{id ? (
+  <a href={`/view/${id}`}>
+    {id.slice(0,4)}年{id.slice(4,6)}月{id.slice(6,8)}日 {id.slice(9,11)}時{id.slice(11,13)}分 発表 短期予報解説資料/関連天気図等
+  </a>
+) : (
+  <span>最新のデータが取得できませんでした。</span>
+)}
