@@ -16,7 +16,7 @@ const data = await getDetailData(id!);
 
 <BaseLayout title={"詳細情報"}, description={data.title}>
   <Prose>
-  <h1>{data.title} のメタデータ詳細</h1>
+  <h1>{data.title} の加工元データ詳細</h1>
   <p><strong>発表日時:</strong> {data.released_at_j}</p>
 
   <div class="metadata-list">
