@@ -1,0 +1,58 @@
+---
+// src/pages/licenses.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Prose from "@components/common/Prose.astro"
+import licensesData from '../data/licenses.json';
+
+interface LicenseInfo {
+  name: string;
+  licenses: string;
+  repository?: string;
+  licenseText?: string;
+  publisher?: string;
+  email?: string;
+  url?: string;
+  version?: string;
+}
+
+// オブジェクト形式から配列形式に変換して扱いやすくする
+const licenses: LicenseInfo[] = Object.entries(licensesData).map(([name, info]) => {
+  // info は未知のオブジェクトとして扱われるため、型をアサーション（明示）する
+  const packageInfo = info as Omit<LicenseInfo, 'name'>;
+  
+  return {
+    name,
+    ...packageInfo,
+  };
+});
+---
+
+<BaseLayout
+  title="オープンソースライセンスページ" 
+  description="本サービスで使用しているオープンソースソフトウェアのライセンス表示"
+>
+  <Prose>
+    <main>
+    <h2>オープンソースソフトウェアのライセンス</h2>
+    <p>本サービスでは、以下のオープンソースソフトウェアを使用しています。</p>
+
+    <div>
+      {licenses.map((pkg) => (
+        <section>
+          <h2>{pkg.name}</h2>
+          <p><strong>ライセンス:</strong> {pkg.licenses}</p>
+          {pkg.repository && (
+            <p><strong>リポジトリ:</strong> <a href={pkg.repository} target="_blank" rel="noopener noreferrer">{pkg.repository}</a></p>
+          )}
+          {pkg.licenseText && (
+            <details>
+              <summary>ライセンス全文を表示</summary>
+              <pre>{pkg.licenseText}</pre>
+            </details>
+          )}
+        </section>
+      ))}
+    </div>
+  </main>
+  </Prose>
+</SinglePage>

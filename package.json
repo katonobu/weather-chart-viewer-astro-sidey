@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev --host",
     "dev-all": "NEW_ENTRY_ID=ALL astro dev --host",
+    "prebuild": "node src/utils/genLicense.js",
     "build": "astro build",
     "build-dev": "VITE_ENV=dev astro build",
     "build-stg": "VITE_ENV=stg astro build",
@@ -47,6 +48,7 @@
     "@iconify-json/ph": "^1.2.2",
     "@iconify-json/simple-icons": "^1.2.85",
     "@tailwindcss/typography": "^0.5.19",
+    "license-checker-rseidelsohn": "^5.0.1",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
