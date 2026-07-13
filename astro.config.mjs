@@ -14,7 +14,6 @@ import astroExpressiveCode from "astro-expressive-code"
 import { unified } from "@astrojs/markdown-remark"
 import rehypeExternalLinks from "rehype-external-links"
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs"
-import rehypeLightbox from "./src/plugins/rehype-lightbox.mjs"
 import rehypeSlug from "rehype-slug"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 
@@ -33,7 +32,6 @@ export default defineConfig({
     processor: unified({
       remarkPlugins: [remarkReadingTime],
       rehypePlugins: [
-        rehypeLightbox,
         rehypeSlug,
         [
           rehypeAutolinkHeadings,
@@ -66,6 +64,12 @@ export default defineConfig({
       watch: {
         usePolling: true,
       },
+      proxy: {
+        '/shared/services/weatherchart': {
+          target: 'https://d1xdqsn7je8bay.cloudfront.net',
+          changeOrigin: true,
+        }
+      }
     },    
   },
 })
