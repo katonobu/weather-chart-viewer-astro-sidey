@@ -75,13 +75,9 @@ export async function getStaticPathsByTargetId(targetId:string) {
 }
 
 // 各コンテンツページでの画像リンクURL生成用URLを返す
-// githubactionsの時は同一ドメイン、それ以外はフルパス
+// 差分吸収はastro.config.mjsのserver.proxyで実施する。
 export function getContentsLinkUrl() {
-  if (process.env.GITHUB_ACTIONS === "true"){
-    return `/${S3_PREFIX}`
-  } else {
-    return `https://${S3_DOMAIN}/${S3_PREFIX}`
-  }
+  return `/${S3_PREFIX}`
 }
 
 type KaisetsuItem = {
@@ -115,4 +111,69 @@ export async function getKaisetsu(id: string): Promise<string[]> {
   })
 
   return tracks
+}
+
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
+const fileWidthHeight: Record<string, Dimensions> = {
+  'kaisetsu_tanki.svg': { width: 595, height: 842 },
+  'ASAS.svg': { width: 1928, height: 1363 },
+  'rain_YYYYMMDDHHMMSS_f00_a00_combined.png': { width: 940, height: 783 },
+  'YYYYMMDDHHMMSS_vis.png': { width: 1536, height: 1024 },
+  'YYYYMMDDHHMMSS_ir.png': { width: 1536, height: 1024 },
+  'YYYYMMDDHHMMSS_vap.png': { width: 1536, height: 1024 },
+  'YYYYMMDDHHMMSS_color.png': { width: 1536, height: 1024 },
+  'YYYYMMDDHHMMSS_strengthen.png': { width: 1536, height: 1024 },
+  'AUPQ35.svg': { width: 725.67, height: 1060.23 },
+  'AUPQ78.svg': { width: 725.67, height: 1060.23 },
+  'AXFE578.svg': { width: 479.31, height: 725.67 },
+  'AXJP130_AXJP140.svg': { width: 725.67, height: 988.08 },
+  'FSAS24.svg': { width: 1191, height: 842 },
+  'FSAS48.svg': { width: 1191, height: 842 },
+  'FXFE502.svg': { width: 915.55, height: 725.67 },
+  'FXFE504.svg': { width: 915.55, height: 725.67 },
+  'FXFE5782.svg': { width: 915.55, height: 725.67 },
+  'FXFE5784.svg': { width: 915.55, height: 725.67 },
+  'FXJP854.svg': { width: 725.67, height: 833.46 }
+}
+
+const tailMatchMap: Record<string, string> = {
+  '_f00_a00_combined.png': 'rain_YYYYMMDDHHMMSS_f00_a00_combined.png',
+  '_vis.png': 'YYYYMMDDHHMMSS_vis.png',
+  '_ir.png': 'YYYYMMDDHHMMSS_ir.png',
+  '_vap.png': 'YYYYMMDDHHMMSS_vap.png',
+  '_color.png': 'YYYYMMDDHHMMSS_color.png',
+  '_strengthen.png': 'YYYYMMDDHHMMSS_strengthen.png',
+};
+
+export async function getDetailDataWithPxSize(id: string) {
+  const detail = await getDetailData(id);
+
+  for (const file of detail.files) {
+    const fileName = file.name as string;
+
+    // 直接ヒットする場合
+    if (fileWidthHeight[fileName]) {
+      file.width = fileWidthHeight[fileName].width;
+      file.height = fileWidthHeight[fileName].height;
+      continue;
+    }
+
+    // 接尾辞によるマッチングを探す
+    const suffix = Object.keys(tailMatchMap).find((s) => fileName.endsWith(s));
+    
+    if (suffix) {
+      const templateKey = tailMatchMap[suffix];
+      const dimension = fileWidthHeight[templateKey];
+      
+      if (dimension) {
+        file.width = dimension.width;
+        file.height = dimension.height;
+      }
+    }
+  }
+  return detail;
 }
