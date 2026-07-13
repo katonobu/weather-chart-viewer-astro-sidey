@@ -1,0 +1,48 @@
+---
+// src/components/layout/Photoswipe.astro
+---
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css" />
+
+<style is:global>
+  /* 1. モーダル背景（薄い黒） */
+  .pswp { --pswp-bg: rgba(0, 0, 0, 0.8); }
+
+  /* 2. 画像の背景を強制的に白くする (透過画像対策) */
+  .pswp__zoom-wrap, .pswp__img {
+    background-color: #ffffff !important;
+  }
+
+  /* 3. ギャラリーの見た目調整 */
+  .pswp-gallery a {
+    cursor: zoom-in;
+    display: block;
+  }
+</style>
+
+<div class="pswp-gallery" id="my-gallery">
+  <slot />
+</div>
+
+<script type="module">
+  import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
+  
+  const initGallery = () => {
+    const galleryEl = document.querySelector('.pswp-gallery');
+    if (!galleryEl || galleryEl.dataset.initialized) return;
+
+    const lightbox = new PhotoSwipeLightbox({
+        gallery: '#my-gallery',
+        children: 'a.pswp-link', // 「pswp-link」クラスを持つ<a>タグだけを対象にする        
+        pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js'),
+        wheelToZoom: true,
+        showHideAnimationDuration: 333,
+        allowPanToNext: true, 
+    });
+    
+    lightbox.init();
+    galleryEl.dataset.initialized = 'true';
+  };
+
+  // AstroのView Transitions対応
+  document.addEventListener('astro:page-load', initGallery);
+</script>
