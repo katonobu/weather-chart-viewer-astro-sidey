@@ -1,9 +1,10 @@
 ---
 // src/components/layout/Photoswipe.astro
 ---
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css" />
-
 <style is:global>
+  /* npm導入により、CSSもパス解決が楽になります */
+  @import "photoswipe/style.css";
+
   /* 1. モーダル背景（薄い黒） */
   .pswp { --pswp-bg: rgba(0, 0, 0, 0.8); }
 
@@ -13,7 +14,7 @@
   }
 
   /* 3. ギャラリーの見た目調整 */
-  .pswp-gallery a {
+  .pswp-gallery a.pswp-link {  
     cursor: zoom-in;
     display: block;
   }
@@ -23,26 +24,40 @@
   <slot />
 </div>
 
-<script type="module">
-  import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
-  
-  const initGallery = () => {
-    const galleryEl = document.querySelector('.pswp-gallery');
-    if (!galleryEl || galleryEl.dataset.initialized) return;
+<script>
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+  import PhotoSwipe from 'photoswipe';
 
-    const lightbox = new PhotoSwipeLightbox({
-        gallery: '#my-gallery',
-        children: 'a.pswp-link', // 「pswp-link」クラスを持つ<a>タグだけを対象にする        
-        pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js'),
-        wheelToZoom: true,
-        showHideAnimationDuration: 333,
-        allowPanToNext: true, 
+  let lightbox: PhotoSwipeLightbox | null = null;
+
+  const initGallery = () => {
+    const galleryEl = document.querySelector('.pswp-gallery') as HTMLElement;
+    if (!galleryEl) {
+      console.log("No element")
+      return
+    }
+
+    // 1. ここでライブラリを先に読み込んでおく（ブラウザのキャッシュに乗る）
+    import('photoswipe');
+
+    lightbox = new PhotoSwipeLightbox({
+      gallery: '#my-gallery',
+      children: 'a.pswp-link', // 「pswp-link」クラスを持つ<a>タグだけを対象にする        
+      pswpModule: PhotoSwipe,
+      wheelToZoom: true,
+      allowPanToNext: true,
+      preload: [0, 1], // 最初の1枚と次の1枚を事前にロードする      
     });
-    
+
     lightbox.init();
-    galleryEl.dataset.initialized = 'true';
   };
 
   // AstroのView Transitions対応
   document.addEventListener('astro:page-load', initGallery);
+  document.addEventListener('astro:before-swap', () => {
+    if (lightbox) {
+      lightbox.destroy();
+      lightbox = null;
+    }
+  });  
 </script>
