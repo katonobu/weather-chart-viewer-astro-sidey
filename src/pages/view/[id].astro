@@ -87,7 +87,13 @@ const CONTENTS_LINK_URL = getContentsLinkUrl()
                     data-pswp-width={file.width}
                     data-pswp-height={file.height}
                   >
-                    <img src={`${CONTENTS_LINK_URL}/${id}/${file.name}`} alt={file.title} />
+                    <img
+                      src={`${CONTENTS_LINK_URL}/${id}/${file.name}`}
+                      alt={file.title} 
+                      style={`aspect-ratio: ${file.width} / ${file.height};`}
+                      class="block w-full"
+                      loading="lazy"                      
+                    />
                   </a>
                 </div>
 
