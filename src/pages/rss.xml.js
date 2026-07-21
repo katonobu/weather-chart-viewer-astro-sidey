@@ -1,6 +1,5 @@
 import rss from "@astrojs/rss"
 
-import { getWritings } from "@utils/getContent"
 import { config } from "@parseConfig"
 
 export async function GET(context) {
