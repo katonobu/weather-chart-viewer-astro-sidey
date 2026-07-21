@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {getContentsLinkUrl} from "../utils/s3"
+import {getContentsLinkUrl} from "@utils/s3";
 
 export const useFetchDirList = () => {
   const [directories, setDirectories] = useState([])

@@ -1,4 +1,4 @@
-import { usePhotoSwipe } from '../../hooks/usePhotoSwipe'
+import { usePhotoSwipe } from '@hooks/usePhotoSwipe'
 import 'photoswipe/style.css';
 type Props = {
   id: string;

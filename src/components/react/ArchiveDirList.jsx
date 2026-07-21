@@ -1,4 +1,4 @@
-import { useFetchDirList } from '../../hooks/useFetchDirList'
+import { useFetchDirList } from '@hooks/useFetchDirList'
 
 export default function ArchiveDirList() {
   const {

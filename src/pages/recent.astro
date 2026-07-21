@@ -1,7 +1,7 @@
 ---
 // src/pages/recent.astro
-import BaseLayout from "../layouts/BaseLayout.astro";
-import {getDirectoryList} from "../utils/s3";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import {getDirectoryList} from "@utils/s3";
 
 // 最新の14件（1日2回×7日分）を取得
 const list = await getDirectoryList()

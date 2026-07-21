@@ -1,6 +1,6 @@
 ---
 // src/components/LatestLink.astro
-import { getDirectoryList } from '../../utils/s3';
+import { getDirectoryList } from '@utils/s3';
 
 // S3からの非同期取得は、Astroコンポーネント内であれば100%安全に実行できます
 const list = await getDirectoryList() || null
