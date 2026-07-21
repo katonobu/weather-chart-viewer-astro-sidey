@@ -12,13 +12,13 @@ const CONTENTS_LINK_URL = getContentsLinkUrl()
         <h1 id="top">{data.title}</h1>
         <p>{data.released_at_j}</p>
     </div>
-    <a href={`/view/${newerId}`}>
-        {newerId ? "＜＜" : ""}
-    </a>
+    {
+        olderId?<span>(old)</span><a href={`/view/${olderId}`}>＜＜</a>:null
+    }
     <span> 前後のデータ </span>
-    <a href={`/view/${olderId}`}>
-        {olderId ? "＞＞" : ""}
-    </a>
+    {
+        newerId?<a href={`/view/${newerId}`}>＞＞</a><span>(new)</span>:null
+    }
     <h2>ページ内リンク</h2>
     <div>
         <ul>
@@ -62,13 +62,13 @@ const CONTENTS_LINK_URL = getContentsLinkUrl()
                         </a>
 
                         <div class="flex items-center gap-2">
-                            <a href={`/view/${newerId}#${file.id}`}>
-                                {newerId ? "＜＜" : ""}
-                            </a>
+                            {
+                                newerId?<a href={`/view/${newerId}#${file.id}`}>＜＜</a><span>(new)</span>:null
+                            }
                             <span> 前後のデータ </span>
-                            <a href={`/view/${olderId}#${file.id}`}>
-                                {olderId ? "＞＞" : ""}
-                            </a>
+                            {
+                                olderId?<span>(old)</span><a href={`/view/${olderId}#${file.id}`}>＞＞</a>:null
+                            }
                         </div>
 
                         <div class="w-full overflow-x-auto bg-white border border-gray-100">
@@ -97,7 +97,11 @@ const CONTENTS_LINK_URL = getContentsLinkUrl()
     </Photoswipe>
 
     <h2>データ情報</h2>
-    <a href="https://www.jma.go.jp/jma/index.html">
+    <a 
+        href="https://www.jma.go.jp/jma/index.html"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
         気象庁ホームページ
     </a>のデータを加工して作成。
     <br />
