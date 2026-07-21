@@ -1,0 +1,52 @@
+name: Build only
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  SERVICE: weatherchart
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Set STAGE
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "STAGE=prd" >> $GITHUB_ENV
+          else
+            echo "STAGE=dev" >> $GITHUB_ENV
+          fi
+
+      - name: Display service,STAGE
+        run: |
+          # 環境変数の表示
+          echo "Service: ${{ env.SERVICE }}"
+          echo "STAGE: ${{ env.STAGE }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: katonobu/weather-chart-viewer-astro-sidey
+          ref: main
+
+      - name: Build Astro
+        run: |
+          npm install
+          npm run build-${{ env.STAGE }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SERVICE }}-${{ env.STAGE }}
+          path: dist
+          retention-days: 15          
+
