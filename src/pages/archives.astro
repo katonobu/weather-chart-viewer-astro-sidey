@@ -5,7 +5,11 @@ import Prose from "@components/common/Prose.astro";
 import ArchiveView from "@components/react/ArchiveView"
 import TextToSpeechWrap from "@components/react/TextToSpeechWrap"
 ---
-<BaseLayout title={"Archive data"} , description={""}, addPaddingBottom={true}>
+<BaseLayout
+  title={"短期予報解説資料"} 
+  description={"気象庁 短期予報解説資料 / 関連天気図・衛星画像 | katonobu"}
+  addPaddingBottom={true}
+>
   <Prose>
     <ArchiveView client:load />
   </Prose>
@@ -17,4 +21,3 @@ import TextToSpeechWrap from "@components/react/TextToSpeechWrap"
   </div>
 
 </BaseLayout>
-
