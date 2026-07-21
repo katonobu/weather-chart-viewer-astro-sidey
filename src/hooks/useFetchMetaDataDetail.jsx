@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import {getContentsLinkUrl} from "../utils/s3"
+import {getContentsLinkUrl} from "@utils/s3"
 
 export const useFetchMetaDataDetail = ( ) => {
   const [metadata, setMetadata] = useState(null)
   const [loading, setLoading] = useState(true)
-  const contentsPath = getContentsLinkUrl()
 
   useEffect(() => {
+    const contentsPath = getContentsLinkUrl()
     const params = new URLSearchParams(window.location.search);
     const dir = params.get("dir");
 
@@ -23,7 +23,7 @@ export const useFetchMetaDataDetail = ( ) => {
         console.error('Error fetching metadata:', error)
         setLoading(false)
       })
-  }, [contentsPath])
+  }, [])
 
   return {
     metadata,
