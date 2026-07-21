@@ -1,6 +1,6 @@
-import { useTextToSpeech } from "../hooks/useTextToSpeech";
-import { useTtsTicker } from "../hooks/useTtsTicker";
-import { TtsTicker } from "./TtsTicker";
+import { useTextToSpeech } from "@hooks/useTextToSpeech";
+import { useTtsTicker } from "@hooks/useTtsTicker";
+import { TtsTicker } from "@components/react/TtsTicker";
 
 export const TextToSpeechCtrl = ({texts, viewtext = true, loading = false}) => {
   const {

@@ -1,56 +1,32 @@
 // src/utils/s3.ts
 
-/*
-単語定義
-- コンテンツ
-  - 天気図等の取得した画像データ
-- コンテンツディレクトリ
-  - コンテンツの保存されているディレクトリ
-- コンテンツページ
-  - コンテンツディレクトリ以下のファイルと1対1で対応したhtml
-- トップページ
-  - コンテンツページへの一覧を含むページ
-
-  対応すべき環境
-- ローカル開発
-  - コンテンツパスはFQDN指定
-  - ページ内は相対パス指定
-- リリース
-  - コンテンツパスは相対パス指定
-  - ページ内は相対パス指定
-if (isGitHubActions) {
-  console.log("GitHub Actions 上で動作しています");
-} else {
-  console.log("ローカル環境で動作しています");
-}
-
-
-- コンテンツディレクトリ更新
-  - astro-sideyはコンテンツディレクトリはいじらない
-- ページ更新
-  - トップページ、コンテンツページとも更新する。
-  - コンテンツ取得と同じタイミングで実行する場合
-    - コンテンツページは、直近2ページ分を生成
-*/
-
+import { boolean } from "astro:schema";
 
 // S3のバケットURL（環境に合わせて変更してください）
 const S3_DOMAIN = "d1xdqsn7je8bay.cloudfront.net"
 const S3_PREFIX = "shared/services/weatherchart"
 const CONTENTS_FETCH_URL = `https://${S3_DOMAIN}/${S3_PREFIX}`;
 
-let dirlistCache:string[]|null = null
+let dirListCache:string[]|null = null
+let buildDirListCache:string[]|null = null
 
 /**
  * IDリストを取得 (一覧表示用)
  */
-export async function getDirectoryList(): Promise<string[]|null> {
-  if (dirlistCache === null) {
+export async function getDirectoryList(): Promise<string[]> {
+  if (dirListCache === null) {
     const response = await fetch(`${CONTENTS_FETCH_URL}/directory_list.json`);
     if (!response.ok) throw new Error("Failed to fetch directory list");
-    dirlistCache = await response.json();
+    dirListCache = await response.json();
   }
-  return dirlistCache;
+  if (dirListCache === null) {
+    dirListCache = []
+  }
+  if (buildDirListCache === null) {
+    // build対象は先頭14個
+    buildDirListCache = dirListCache.slice(0,14)
+  }
+  return dirListCache;
 }
 
 /**
@@ -62,16 +38,20 @@ export async function getDetailData(id: string) {
   return await response.json();
 }
 
-export async function getStaticPathsByTargetId(targetId:string) {
-  if (targetId === "ALL") { // "ALL"が指定されたら全部
-    const list = (await getDirectoryList()) || []; // ['20260703_1540', '20260703_0000', ...]
-    return list.map((id: string) => ({ params: { id } }));
-  } else if (targetId) { // ALL以外、何か指定されていたらディレクトリ名とみなす。
-    return [{ params: { id: targetId } }];
-  } else { // なにも指定されていなければ、最新の2つ分を生成対象とする。
-    const list = (await getDirectoryList()) || []; // ['20260703_1540', '20260703_0000', ...]
-    return list.slice(0,2).map((id: string) => ({ params: { id } }));
+export async function getStaticPathsByTargetId() {
+  const list = await getBuildDirList()
+  return list.map((id: string) => ({ params: { id } }));
+}
+
+export async function getBuildDirList(): Promise<string[]>  {
+  if (buildDirListCache === null) {
+    // getDirectoryList()でbuildDirListCacheに値が入ることが保証される。
+    await getDirectoryList()
+    if (buildDirListCache === null) {
+      throw new Error('Failed to fetch dir list');
+    }
   }
+  return buildDirListCache
 }
 
 // 各コンテンツページでの画像リンクURL生成用URLを返す
@@ -152,28 +132,35 @@ const tailMatchMap: Record<string, string> = {
 export async function getDetailDataWithPxSize(id: string) {
   const detail = await getDetailData(id);
 
+  let wh_added = false
   for (const file of detail.files) {
-    const fileName = file.name as string;
+    if (!("width" in file && "height" in file)) {
+      const fileName = file.name as string;
 
-    // 直接ヒットする場合
-    if (fileWidthHeight[fileName]) {
-      file.width = fileWidthHeight[fileName].width;
-      file.height = fileWidthHeight[fileName].height;
-      continue;
-    }
-
-    // 接尾辞によるマッチングを探す
-    const suffix = Object.keys(tailMatchMap).find((s) => fileName.endsWith(s));
-    
-    if (suffix) {
-      const templateKey = tailMatchMap[suffix];
-      const dimension = fileWidthHeight[templateKey];
-      
-      if (dimension) {
-        file.width = dimension.width;
-        file.height = dimension.height;
+      // 直接ヒットする場合
+      if (fileWidthHeight[fileName]) {
+        file.width = fileWidthHeight[fileName].width;
+        file.height = fileWidthHeight[fileName].height;
+        continue;
       }
+
+      // 接尾辞によるマッチングを探す
+      const suffix = Object.keys(tailMatchMap).find((s) => fileName.endsWith(s));
+      
+      if (suffix) {
+        const templateKey = tailMatchMap[suffix];
+        const dimension = fileWidthHeight[templateKey];
+        
+        if (dimension) {
+          file.width = dimension.width;
+          file.height = dimension.height;
+        }
+      }
+      wh_added = true
     }
+  }
+  if (!wh_added) {
+    console.log(`File ${id} has already have W,H`)
   }
   return detail;
 }
