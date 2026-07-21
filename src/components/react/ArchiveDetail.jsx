@@ -1,16 +1,27 @@
 import { useFetchMetaDataDetail } from "@hooks/useFetchMetaDataDetail"
-import { getContentsLinkUrl } from "@/utils/s3"
+import { navigate } from 'astro:transitions/client';
 
 export default function ArchiveDetail() {
     const {
         metadata: data,
-        loading: detailLoading
+        loading: detailLoading,
+        error
     } = useFetchMetaDataDetail()
 
-    const CONTENTS_LINK_URL = getContentsLinkUrl()
-
-    if (detailLoading || !data) {
+    if (detailLoading) {
         return <p className="p-4">読み込み中...</p>
+    }
+
+    if (error) {
+        console.log(error)
+        navigate('/error');
+        return <p className="p-4">エラー...</p>
+    }
+
+    if (!data) {
+        console.log("No error but data is invalid")
+        navigate('/error');
+        return <p className="p-4">エラー...</p>
     }
 
 
@@ -21,16 +32,23 @@ export default function ArchiveDetail() {
 
             <div>
                 {data.files.map((file) => (
-                    <div>
+                    <div key={`${data.id}_${file.id}`}>
                         <section className="m-4 p-4 border border-gray-100 rounded-lg">
-                            <h2 className="text-lg border-b border-gray-200 pb-2">{file.title}</h2>
+                            <h2 className="text-lg border-b border-gray-200 pb-2 mt-3">{file.title}</h2>
                             <ul className="list-none pl-0">
                             <li className="mb-2"><strong>ダウンロード時刻(UTC):</strong> {file.download_at}</li>
                             <li className="mb-2">
                                 <strong>ダウンロード元URL:</strong>
                                 <ul  className="list-none pl-0">
-                                {file.urls.map((url) => (
-                                    <li className="mb-2"><a href={url} target="_blank" rel="noopener noreferrer">{url}</a></li>
+                                {file.urls.map((url, idx) => (
+                                    <li 
+                                      className="mb-2"
+                                      key={`${data.id}_${file.id}_${idx}`}
+                                    >
+                                        <a href={url} target="_blank" rel="noopener noreferrer">
+                                            {url}
+                                        </a>
+                                    </li>
                                 ))}
                                 </ul>
                             </li>

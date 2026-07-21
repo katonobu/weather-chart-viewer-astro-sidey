@@ -2,11 +2,13 @@ import { useFetchMetaDataDetail } from "@hooks/useFetchMetaDataDetail"
 import { useFetchDirList } from '@hooks/useFetchDirList'
 import { Photoswipe } from "@components/react/Photoswipe";
 import { getContentsLinkUrl } from "@/utils/s3"
+import { navigate } from 'astro:transitions/client';
 
 export default function ArchiveView() {
     const {
         metadata: data,
-        loading: detailLoading
+        loading: detailLoading,
+        error
     } = useFetchMetaDataDetail()
 
     const {
@@ -16,8 +18,21 @@ export default function ArchiveView() {
 
     const CONTENTS_LINK_URL = getContentsLinkUrl()
 
-    if (dirLoading || detailLoading || !data) {
+    if (dirLoading || detailLoading) {
         return <p className="p-4">読み込み中...</p>
+    }
+
+    if (error) {
+        console.log("ArchiveView.jsx")
+        console.log(error)
+        navigate('/error');
+        return <p className="p-4">エラー...</p>
+    }
+
+    if (!data) {
+        console.log("No error but data is invalid")
+        navigate('/error');
+        return <p className="p-4">エラー...</p>
     }
 
     const currentIndex = dirList.indexOf(data.id)
@@ -35,13 +50,13 @@ export default function ArchiveView() {
                 <h1 id="top">{data.title}</h1>
                 <p>{data.released_at_j}</p>
             </div>
-            <a href={`/archives?dir=${newerId}`}>
-                {newerId ? "＜＜" : ""}
-            </a>
+            {
+                olderId?<><span>(old)</span><a href={`/archives?dir=${olderId}`}>＜＜</a></>:null
+            }
             <span> 前後のデータ </span>
-            <a href={`/archives?dir=${olderId}`}>
-                {olderId ? "＞＞" : ""}
-            </a>
+            {
+                newerId?<><a href={`/archives?dir=${newerId}`}>＞＞</a><span>(new)</span></>:null
+            }
             <h2>ページ内リンク</h2>
             <div>
                 <ul>
@@ -83,17 +98,17 @@ export default function ArchiveView() {
                                     </svg>
                                 </a>
 
-                                <div class="flex items-center gap-2">
-                                    <a href={`/archives?dir=${newerId}#${file.id}`}>
-                                        {newerId ? "＜＜" : ""}
-                                    </a>
+                                <div className="flex items-center gap-2">
+                                    {
+                                        olderId?<><span>(old)</span><a href={`/archives?dir=${olderId}#${file.id}`}>＜＜</a></>:null
+                                    }
                                     <span> 前後のデータ </span>
-                                    <a href={`/archives?dir=${olderId}#${file.id}`}>
-                                        {olderId ? "＞＞" : ""}
-                                    </a>
+                                    {
+                                        newerId?<><a href={`/archives?dir=${newerId}#${file.id}`}>＞＞</a><span>(new)</span></>:null
+                                    }
                                 </div>
 
-                                <div class="w-full overflow-x-auto bg-white border border-gray-100">
+                                <div className="w-full overflow-x-auto bg-white border border-gray-100">
                                     <a
                                         href={`${CONTENTS_LINK_URL}/${data.id}/${file.name}`}
                                         className="pswp-link"
@@ -118,7 +133,11 @@ export default function ArchiveView() {
                 </div>
             </Photoswipe>
             <h2>データ情報</h2>
-            <a href="https://www.jma.go.jp/jma/index.html">
+            <a 
+                href="https://www.jma.go.jp/jma/index.html"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
                 気象庁ホームページ
             </a>のデータを加工して作成。
             <br />
