@@ -1,0 +1,12 @@
+---
+// src/pages/archives/[id].astro
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Prose from "@components/common/Prose.astro";
+import ArchiveDetail from "@components/react/ArchiveDetail"
+---
+<BaseLayout title={"Archive detail data"} , description={""}, addPaddingBottom={false}>
+  <Prose>
+    <ArchiveDetail client:load />
+  </Prose>
+</BaseLayout>
+
