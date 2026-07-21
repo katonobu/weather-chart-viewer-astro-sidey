@@ -39,11 +39,6 @@ export default function ArchiveView() {
     const newerId = 0 < currentIndex ? dirList[currentIndex - 1] : null
     const olderId = currentIndex < dirList.length - 1 ? dirList[currentIndex + 1] : null
 
-    /* 
-    ToDo:
-    - Photoswipeのzoom/panが効かない
-    */
-
     return (
         <div>
             <div>
