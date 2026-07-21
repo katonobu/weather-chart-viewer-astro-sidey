@@ -63,11 +63,11 @@ const CONTENTS_LINK_URL = getContentsLinkUrl()
 
                         <div class="flex items-center gap-2">
                             {
-                                newerId?<a href={`/view/${newerId}#${file.id}`}>＜＜</a><span>(new)</span>:null
+                                olderId?<span>(old)</span><a href={`/view/${olderId}#${file.id}`}>＜＜</a>:null
                             }
                             <span> 前後のデータ </span>
                             {
-                                olderId?<span>(old)</span><a href={`/view/${olderId}#${file.id}`}>＞＞</a>:null
+                                newerId?<a href={`/view/${newerId}#${file.id}`}>＞＞</a><span>(new)</span>:null
                             }
                         </div>
 
