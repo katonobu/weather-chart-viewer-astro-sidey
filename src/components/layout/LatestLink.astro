@@ -1,10 +1,10 @@
 ---
 // src/components/LatestLink.astro
-import { getDirectoryList } from '../../utils/s3';
+import {getBuildDirList} from "@utils/s3";
 
-// S3からの非同期取得は、Astroコンポーネント内であれば100%安全に実行できます
-const list = await getDirectoryList() || null
-const id = list===null?null:list[0]
+// 最新の14件（1日2回×7日分）を取得
+const list = await getBuildDirList()
+const id = 0 < list.length?list[0]:null
 ---
 
 {id ? (

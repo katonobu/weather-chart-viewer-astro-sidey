@@ -3,7 +3,7 @@ import { parse } from 'node-html-parser'; // npm install node-html-parser
 import {
   getDirectoryList,
   getDetailData
-} from "./s3.ts";
+} from "@util/s3.ts";
 
 const S3_DOMAIN = "d1xdqsn7je8bay.cloudfront.net"
 const S3_PREFIX = "shared/services/weatherchart"

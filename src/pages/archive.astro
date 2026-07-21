@@ -1,45 +1,14 @@
 ---
 // src/pages/archive.astro
-import BaseLayout from "../layouts/BaseLayout.astro";
-import {getDirectoryList} from "../utils/s3";
-
-// 1週間より古い情報一覧を取得
-const list = await getDirectoryList()
-const archiveList = list?list.slice(14):[]
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ArchiveDirList from "@components/react/ArchiveDirList";
 
 ---
 
-<BaseLayout title="保存されている天気図一覧", description="保存されている気象データを表示するページです。">
+<BaseLayout
+    title="保存されている天気図一覧"
+    description="保存されている気象データを表示するページです。"
+>
     <h1>保存されている天気図</h1>
-
-    <ul id="weather-list" class="weather-list">
-        {
-            archiveList.map((id:string) => {
-                return (
-                    <li class="weather-item">
-                        <a href={`/view/${id}`}>
-                            <h3>{id.slice(0,4)}年{id.slice(4,6)}月{id.slice(6,8)}日 {id.slice(9,11)}時{id.slice(11,13)}分 発表</h3>
-                        </a>
-                    </li>
-                )
-            })
-        }
-    </ul>
+    <ArchiveDirList client:load />
 </BaseLayout>
-
-<style>
-    .weather-list {
-        list-style: none;
-        padding: 0;
-    }
-    .weather-item {
-        margin-bottom: 1rem;
-        padding: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-    }
-    .weather-item a {
-        text-decoration: none;
-        color: inherit;
-    }
-</style>

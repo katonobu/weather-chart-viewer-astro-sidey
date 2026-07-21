@@ -1,13 +1,11 @@
 ---
 // src/pages/details/[id].astro
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import Prose from "@components/common/Prose.astro"
-import { getDetailData, getStaticPathsByTargetId } from '../../utils/s3';
+import { getDetailData, getStaticPathsByTargetId } from '@utils/s3';
 
 export async function getStaticPaths() {
-  // 環境変数から ID を取得して生成
-  const targetId = process.env.NEW_ENTRY_ID || ""
-  return getStaticPathsByTargetId(targetId)
+  return getStaticPathsByTargetId()
 }
 
 const { id } = Astro.params;
@@ -19,33 +17,26 @@ const data = await getDetailData(id!);
   <h1>{data.title} の加工元データ詳細</h1>
   <p><strong>発表日時:</strong> {data.released_at_j}</p>
 
-  <div class="metadata-list">
+  <div>
     {data.files.map((file: any) => (
-      <section class="file-metadata">
-        <h2>{file.title}</h2>
-        <ul>
-          <li><strong>ダウンロード時刻(UTC):</strong> {file.download_at}</li>
-          <li>
-            <strong>ダウンロード元URL:</strong>
-            <ul>
-              {file.urls.map((url: string) => (
-                <li><a href={url} target="_blank" rel="noopener noreferrer">{url}</a></li>
-              ))}
-            </ul>
-          </li>
-          <li><strong>ファイル形式:</strong> {file.output}</li>
-          <li><strong>ファイルサイズ:</strong> {(file.size / 1024).toFixed(2)} KB</li>
+      <section class="m-4 p-4 border border-gray-100 rounded-lg">
+        <h2 class="text-lg border-b border-gray-200 pb-2 mt-3">{file.title}</h2>
+        <ul class="list-none pl-0">
+        <li class="mb-2"><strong>ダウンロード時刻(UTC):</strong> {file.download_at}</li>
+        <li class="mb-2">
+          <strong>ダウンロード元URL:</strong>
+          <ul  class="list-none pl-0">
+          {file.urls.map((url:string) => (
+            <li class="mb-2"><a href={url} target="_blank" rel="noopener noreferrer">{url}</a></li>
+          ))}
+          </ul>
+        </li>
+        <li class="mb-2"><strong>ファイル形式:</strong> {file.output}</li>
+        <li class="mb-2"><strong>ファイルサイズ:</strong> {(file.size / 1024).toFixed(2)} KB</li>
         </ul>
       </section>
-      <a href={`/view/${id}`}>← 天気図ページに戻る</a>
+      <a href={`/view/${data.id}`}>← 天気図ページに戻る</a>
     ))}
   </div>
   </Prose>
 </BaseLayout>
-
-<style>
-  .file-metadata { margin: 1rem; padding: 1rem; border: 1px solid #eee; border-radius: 8px; }
-  h2 { font-size: 1.2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; }
-  ul { list-style: none; padding-left: 0; }
-  li { margin-bottom: 0.5rem; }
-</style>

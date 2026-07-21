@@ -20,6 +20,8 @@ const fullTitle = isHome
 const description = pageDescription || config.site.description
 const socialImage = new URL(image || "/og-image.png", config.site.url)
 const canonicalURL = new URL(Astro.url.pathname, config.site.url)
+const envTarget = (import.meta.env.VITE_ENV || 'dev').toUpperCase()
+const titlePrefix = envTarget === "PRD" ? "" : `${envTarget}+`;
 ---
 
 {/* Global Metadata */}
@@ -33,7 +35,7 @@ const canonicalURL = new URL(Astro.url.pathname, config.site.url)
 <link rel="canonical" href={canonicalURL} />
 
 {/* Primary Meta Tags */}
-<title>{fullTitle}</title>
+<title>{`${titlePrefix}${fullTitle}`}</title>
 <meta name="title" content={fullTitle} />
 <meta name="description" content={description} />
 <link rel="sitemap" href="/sitemap-index.xml" />
