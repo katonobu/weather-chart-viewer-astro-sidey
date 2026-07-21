@@ -5,9 +5,7 @@ import Prose from "@components/common/Prose.astro"
 import { getDetailData, getStaticPathsByTargetId } from '@utils/s3';
 
 export async function getStaticPaths() {
-  // 環境変数から ID を取得して生成
-  const targetId = process.env.NEW_ENTRY_ID || ""
-  return getStaticPathsByTargetId(targetId)
+  return getStaticPathsByTargetId()
 }
 
 const { id } = Astro.params;
@@ -22,7 +20,7 @@ const data = await getDetailData(id!);
   <div>
     {data.files.map((file: any) => (
       <section class="m-4 p-4 border border-gray-100 rounded-lg">
-        <h2 class="text-lg border-b border-gray-200 pb-2">{file.title}</h2>
+        <h2 class="text-lg border-b border-gray-200 pb-2 mt-3">{file.title}</h2>
         <ul class="list-none pl-0">
         <li class="mb-2"><strong>ダウンロード時刻(UTC):</strong> {file.download_at}</li>
         <li class="mb-2">

@@ -5,21 +5,19 @@ import Prose from "@components/common/Prose.astro";
 import ChartView from "@components/layout/ChartView.astro"
 import { TextToSpeechCtrl } from "@/components/react/TextToSpeechCtrl";
 import {
-  getDirectoryList,
+  getBuildDirList,
   getDetailDataWithPxSize,
   getStaticPathsByTargetId,
   getKaisetsu,
 } from "@utils/s3";
 
 export async function getStaticPaths() {
-  // 環境変数から ID を取得して生成
-  const targetId = process.env.NEW_ENTRY_ID || "";
-  return getStaticPathsByTargetId(targetId);
+  return getStaticPathsByTargetId();
 }
 
 const { id } = Astro.params;
 const data = await getDetailDataWithPxSize(id!);
-const dirList = (await getDirectoryList()) || []
+const dirList = (await getBuildDirList()) || []
 const currentIndex = dirList.indexOf(id)
 const newerId = 0 < currentIndex ? dirList[currentIndex-1] : null
 const olderId = currentIndex < dirList.length - 1 ? dirList[currentIndex+1] : null

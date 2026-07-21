@@ -7,18 +7,26 @@ const S3_DOMAIN = "d1xdqsn7je8bay.cloudfront.net"
 const S3_PREFIX = "shared/services/weatherchart"
 const CONTENTS_FETCH_URL = `https://${S3_DOMAIN}/${S3_PREFIX}`;
 
-let dirlistCache:string[]|null = null
+let dirListCache:string[]|null = null
+let buildDirListCache:string[]|null = null
 
 /**
  * IDリストを取得 (一覧表示用)
  */
-export async function getDirectoryList(): Promise<string[]|null> {
-  if (dirlistCache === null) {
+export async function getDirectoryList(): Promise<string[]> {
+  if (dirListCache === null) {
     const response = await fetch(`${CONTENTS_FETCH_URL}/directory_list.json`);
     if (!response.ok) throw new Error("Failed to fetch directory list");
-    dirlistCache = await response.json();
+    dirListCache = await response.json();
   }
-  return dirlistCache;
+  if (dirListCache === null) {
+    dirListCache = []
+  }
+  if (buildDirListCache === null) {
+    // build対象は先頭14個
+    buildDirListCache = dirListCache.slice(0,14)
+  }
+  return dirListCache;
 }
 
 /**
@@ -30,16 +38,20 @@ export async function getDetailData(id: string) {
   return await response.json();
 }
 
-export async function getStaticPathsByTargetId(targetId:string) {
-  if (targetId === "ALL") { // "ALL"が指定されたら全部
-    const list = (await getDirectoryList()) || []; // ['20260703_1540', '20260703_0000', ...]
-    return list.map((id: string) => ({ params: { id } }));
-  } else if (targetId) { // ALL以外、何か指定されていたらディレクトリ名とみなす。
-    return [{ params: { id: targetId } }];
-  } else { // なにも指定されていなければ、最新の2つ分を生成対象とする。
-    const list = (await getDirectoryList()) || []; // ['20260703_1540', '20260703_0000', ...]
-    return list.slice(0,2).map((id: string) => ({ params: { id } }));
+export async function getStaticPathsByTargetId() {
+  const list = await getBuildDirList()
+  return list.map((id: string) => ({ params: { id } }));
+}
+
+export async function getBuildDirList(): Promise<string[]>  {
+  if (buildDirListCache === null) {
+    // getDirectoryList()でbuildDirListCacheに値が入ることが保証される。
+    await getDirectoryList()
+    if (buildDirListCache === null) {
+      throw new Error('Failed to fetch dir list');
+    }
   }
+  return buildDirListCache
 }
 
 // 各コンテンツページでの画像リンクURL生成用URLを返す
