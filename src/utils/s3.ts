@@ -1,7 +1,4 @@
 // src/utils/s3.ts
-
-import { boolean } from "astro:schema";
-
 // S3のバケットURL（環境に合わせて変更してください）
 const S3_DOMAIN = "d1xdqsn7je8bay.cloudfront.net"
 const S3_PREFIX = "shared/services/weatherchart"
@@ -9,6 +6,7 @@ const CONTENTS_FETCH_URL = `https://${S3_DOMAIN}/${S3_PREFIX}`;
 
 let dirListCache:string[]|null = null
 let buildDirListCache:string[]|null = null
+const detailCache:any = {}
 
 /**
  * IDリストを取得 (一覧表示用)
@@ -33,9 +31,16 @@ export async function getDirectoryList(): Promise<string[]> {
  * 特定IDの詳細メタデータを取得 (詳細ページ用)
  */
 export async function getDetailData(id: string) {
-  const response = await fetch(`${CONTENTS_FETCH_URL}/${id}/metadata_detail.json`);
-  if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
-  return await response.json();
+  if (!(id in detailCache)) {
+    console.log(`Cache fail, get it : ${id}`)
+    const response = await fetch(`${CONTENTS_FETCH_URL}/${id}/metadata_detail.json`);
+    if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
+    const detail = await response.json();
+    detailCache[id] = appendHeightWidth(detail)
+  } else {
+    console.log(`Cache hit : ${id}`)
+  }
+  return detailCache[id]
 }
 
 export async function getStaticPathsByTargetId() {
@@ -129,9 +134,7 @@ const tailMatchMap: Record<string, string> = {
   '_strengthen.png': 'YYYYMMDDHHMMSS_strengthen.png',
 };
 
-export async function getDetailDataWithPxSize(id: string) {
-  const detail = await getDetailData(id);
-
+function appendHeightWidth(detail:any) {
   let wh_added = false
   for (const file of detail.files) {
     if (!("width" in file && "height" in file)) {
@@ -160,7 +163,7 @@ export async function getDetailDataWithPxSize(id: string) {
     }
   }
   if (!wh_added) {
-    console.log(`File ${id} has already have W,H`)
+    console.log(`File ${detail.id} has already have W,H`)
   }
   return detail;
 }
