@@ -11,12 +11,12 @@ const recentList = await getBuildDirList()
 <BaseLayout title="直近1週間の天気図一覧", description="直近1週間の気象データを表示するページです。">
     <h1>直近1週間の天気図</h1>
 
-    <ul id="weather-list" class="weather-list">
+    <ul id="weather-list" class="list-none p-0">
         {
             recentList.map((id:string) => {
                 return (
-                    <li class="weather-item">
-                        <a href={`/view/${id}`}>
+                    <li class="mb-4 p-4 border border-gray-300 rounded-lg">
+                        <a href={`/view/${id}`} class="no-underline text-inherit">
                             <h3>{id.slice(0,4)}年{id.slice(4,6)}月{id.slice(6,8)}日 {id.slice(9,11)}時{id.slice(11,13)}分 発表</h3>
                         </a>
                     </li>
@@ -25,20 +25,3 @@ const recentList = await getBuildDirList()
         }
     </ul>
 </BaseLayout>
-
-<style>
-    .weather-list {
-        list-style: none;
-        padding: 0;
-    }
-    .weather-item {
-        margin-bottom: 1rem;
-        padding: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-    }
-    .weather-item a {
-        text-decoration: none;
-        color: inherit;
-    }
-</style>
