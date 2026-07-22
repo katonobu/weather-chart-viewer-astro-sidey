@@ -6,7 +6,7 @@ import ChartView from "@components/layout/ChartView.astro"
 import { TextToSpeechCtrl } from "@/components/react/TextToSpeechCtrl";
 import {
   getBuildDirList,
-  getDetailDataWithPxSize,
+  getDetailData,
   getStaticPathsByTargetId,
   getKaisetsu,
 } from "@utils/s3";
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { id } = Astro.params;
-const data = await getDetailDataWithPxSize(id!);
+const data = await getDetailData(id!);
 const dirList = (await getBuildDirList()) || []
 const currentIndex = dirList.indexOf(id)
 const newerId = 0 < currentIndex ? dirList[currentIndex-1] : null

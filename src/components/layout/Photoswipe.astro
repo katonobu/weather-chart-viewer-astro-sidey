@@ -4,6 +4,8 @@
 <style is:global>
   /* npm導入により、CSSもパス解決が楽になります */
   @import "photoswipe/style.css";
+  @import 'photoswipe/dist/photoswipe.css';
+  @import 'photoswipe-dynamic-caption-plugin/photoswipe-dynamic-caption-plugin.css';
 
   /* 1. モーダル背景（薄い黒） */
   .pswp { --pswp-bg: rgba(0, 0, 0, 0.8); }
@@ -27,13 +29,14 @@
 <script>
   import PhotoSwipeLightbox from 'photoswipe/lightbox';
   import PhotoSwipe from 'photoswipe';
+  import PhotoSwipeDynamicCaption from 'photoswipe-dynamic-caption-plugin';
 
   let lightbox: PhotoSwipeLightbox | null = null;
 
   const initGallery = () => {
     const galleryEl = document.querySelector('.pswp-gallery') as HTMLElement;
     if (!galleryEl) {
-      console.log("No element")
+      console.error("No element")
       return
     }
 
@@ -47,6 +50,9 @@
       wheelToZoom: true,
       allowPanToNext: true,
       preload: [0, 1], // 最初の1枚と次の1枚を事前にロードする      
+    });
+    const captionPlugin = new PhotoSwipeDynamicCaption(lightbox, {
+      type: 'below', // 'auto', 'below', 'aside' から選択
     });
 
     lightbox.init();

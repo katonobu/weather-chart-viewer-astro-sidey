@@ -23,14 +23,13 @@ export default function ArchiveView() {
     }
 
     if (error) {
-        console.log("ArchiveView.jsx")
-        console.log(error)
+        console.error(error)
         navigate('/error');
         return <p className="p-4">エラー...</p>
     }
 
     if (!data) {
-        console.log("No error but data is invalid")
+        console.error("No error but data is invalid")
         navigate('/error');
         return <p className="p-4">エラー...</p>
     }
