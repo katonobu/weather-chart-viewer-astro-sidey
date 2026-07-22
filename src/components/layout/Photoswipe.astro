@@ -36,7 +36,8 @@
   const initGallery = () => {
     const galleryEl = document.querySelector('.pswp-gallery') as HTMLElement;
     if (!galleryEl) {
-      console.error("No element")
+      // prefetchで走るとここに来ることがあるので、errorではなくlogにした。
+      console.log("No element...")
       return
     }
 
