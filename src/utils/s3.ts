@@ -32,13 +32,13 @@ export async function getDirectoryList(): Promise<string[]> {
  */
 export async function getDetailData(id: string) {
   if (!(id in detailCache)) {
-    console.log(`Cache fail, get it : ${id}`)
+//    console.log(`Cache fail, get it : ${id}`)
     const response = await fetch(`${CONTENTS_FETCH_URL}/${id}/metadata_detail.json`);
     if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
     const detail = await response.json();
     detailCache[id] = appendHeightWidth(detail)
   } else {
-    console.log(`Cache hit : ${id}`)
+//    console.log(`Cache hit : ${id}`)
   }
   return detailCache[id]
 }
@@ -163,7 +163,7 @@ function appendHeightWidth(detail:any) {
     }
   }
   if (!wh_added) {
-    console.log(`File ${detail.id} has already have W,H`)
+//    console.log(`File ${detail.id} has already have W,H`)
   }
   return detail;
 }
