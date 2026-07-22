@@ -1,4 +1,5 @@
 // sidey.config.ts
+import {SERVICE_URL} from "./src/utils/s3"
 
 export const sideyConfig = {
   /**
@@ -15,7 +16,7 @@ export const sideyConfig = {
     description: "気象庁が一日2回発表している短期予報解説資料と、その時刻に対応する関連天気図・衛星画像データを発表毎にまとめたページ。",
 
     // 公開する本番URL（GitHub Pages / CloudFront / Vercel など）
-    url: "https://weatherchart.office-katonobu.com",
+    url: SERVICE_URL,
 
     // 著者名（著作権表記やmetaタグに使用）
     author: "katonobu",
@@ -34,7 +35,6 @@ export const sideyConfig = {
     { label: "Home", href: "/" },
     { label: "Recent", href: "/recent" },
     { label: "Charts", href: "/charts" },
-    { label: "Archive", href: "/archive" },
     { label: "About", href: "/about" },
   ],
 }
