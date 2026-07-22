@@ -45,11 +45,11 @@ export default function ArchiveView() {
                 <p>{data.released_at_j}</p>
             </div>
             {
-                olderId?<><span>(old)</span><a href={`/archives?dir=${olderId}`}>＜＜</a></>:null
+                newerId?<><a href={`/archives?dir=${newerId}`}>＜＜</a><span>(new)</span></>:null
             }
             <span> 前後のデータ </span>
             {
-                newerId?<><a href={`/archives?dir=${newerId}`}>＞＞</a><span>(new)</span></>:null
+                olderId?<><span>(old)</span><a href={`/archives?dir=${olderId}`}>＞＞</a></>:null
             }
             <h2>ページ内リンク</h2>
             <div>
@@ -94,11 +94,11 @@ export default function ArchiveView() {
 
                                 <div className="flex items-center gap-2">
                                     {
-                                        olderId?<><span>(old)</span><a href={`/archives?dir=${olderId}#${file.id}`}>＜＜</a></>:null
+                                        newerId?<><a href={`/archives?dir=${newerId}#${file.id}`}>＜＜</a><span>(new)</span></>:null
                                     }
                                     <span> 前後のデータ </span>
                                     {
-                                        newerId?<><a href={`/archives?dir=${newerId}#${file.id}`}>＞＞</a><span>(new)</span></>:null
+                                        olderId?<><span>(old)</span><a href={`/archives?dir=${olderId}#${file.id}`}>＞＞</a></>:null
                                     }
                                 </div>
 
