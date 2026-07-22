@@ -31,21 +31,4 @@ export function TtsTicker({ currentStr, displayStartIndex }) {
       </div>
     </div>
   );
-/*  
-  return (
-    <div className="w-full overflow-hidden whitespace-nowrap text-lg font-mono">
-      <div
-        className="
-          inline-block
-          transition-transform
-          duration-500
-          ease-linear
-        "
-        style={{ transform: `translateX(${translateX}px)` }}
-      >
-        {displayStr}
-      </div>
-    </div>
-  );
-  */
 }
