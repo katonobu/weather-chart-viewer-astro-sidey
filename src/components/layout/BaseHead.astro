@@ -19,7 +19,7 @@ const fullTitle = isHome
     ? `${pageTitle} — ${siteName}`
     : siteName
 const description = pageDescription || config.site.description
-const socialImage = new URL(image || "/og-image.png", config.site.url)
+const socialImage = new URL(image || "/og-img.png", config.site.url)
 const canonicalURL = new URL(Astro.url.pathname, config.site.url)
 
 const titlePrefix = isProductionEnv ? "" : `${envTarget.toUpperCase()}+`
