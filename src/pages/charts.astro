@@ -11,9 +11,10 @@ for (const dir of recentList) {
 }
 const fileNames = []
 for (const file of details[recentList[0]].files) {
+    const name = file.name.replace(/^\d{14}_/g, "").replace(/^rain_\d{14}_f00_a00_combined/g, "rain").split(".")[0]
     fileNames.push({
         title:file.title.replace(/\(\d{10}\)/g, ""),
-        name:file.name.replace(/^\d{14}_/g, "").replace(/^rain_\d{14}_f00_a00_combined/g, "rain").split(".")[0]
+        path:`${recentList[0]}-${name}`
     })
 }
 ---
@@ -26,7 +27,7 @@ for (const file of details[recentList[0]].files) {
             fileNames.map((fileName:any) => {
                 return (
                     <li class="mb-4 p-4 border border-gray-300 rounded-lg">
-                        <a href={`/charts/${fileName.name}`} class="no-underline text-inherit">
+                        <a href={`/charts/${fileName.path}`} class="no-underline text-inherit">
                             <h3>{fileName.title}</h3>
                         </a>
                     </li>
