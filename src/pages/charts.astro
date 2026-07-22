@@ -1,0 +1,37 @@
+---
+// src/pages/charts.astro
+import BaseLayout from "@layouts/BaseLayout.astro";
+import {getBuildDirList, getDetailData} from "@utils/s3";
+
+// 最新の14件（1日2回×7日分）を取得
+const recentList = await getBuildDirList() as string[]
+const details: Record<string, any> = {};
+for (const dir of recentList) {
+    details[dir] = await getDetailData(dir)
+}
+const fileNames = []
+for (const file of details[recentList[0]].files) {
+    fileNames.push({
+        title:file.title.replace(/\(\d{10}\)/g, ""),
+        name:file.name.replace(/^\d{14}_/g, "").replace(/^rain_\d{14}_f00_a00_combined/g, "rain").split(".")[0]
+    })
+}
+---
+
+<BaseLayout title="各種図面一覧", description="直近1週間の図面毎へのリンクページです。">
+    <h1>各種図面一覧</h1>
+
+    <ul id="weather-list" class="list-none p-0">
+        {
+            fileNames.map((fileName:any) => {
+                return (
+                    <li class="mb-4 p-4 border border-gray-300 rounded-lg">
+                        <a href={`/charts/${fileName.name}`} class="no-underline text-inherit">
+                            <h3>{fileName.title}</h3>
+                        </a>
+                    </li>
+                )
+            })
+        }
+    </ul>
+</BaseLayout>
