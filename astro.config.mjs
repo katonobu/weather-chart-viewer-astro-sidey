@@ -20,6 +20,8 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings"
 // Sidey Config
 import { sideyConfig } from "./sidey.config.ts"
 
+import { CONTENTS_FETCH_DOMAIN_URL } from "./src/utils/s3.ts"
+
 import react from "@astrojs/react";
 
 // https://astro.build/config
@@ -66,7 +68,7 @@ export default defineConfig({
       },
       proxy: {
         '/shared/services/weatherchart': {
-          target: 'https://d1xdqsn7je8bay.cloudfront.net',
+          target: CONTENTS_FETCH_DOMAIN_URL,
           changeOrigin: true,
         }
       }

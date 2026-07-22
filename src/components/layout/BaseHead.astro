@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions"
 import { config } from "@parseConfig"
+import { isProductionEnv, envTarget} from "@utils/envUtil"
 
 interface Props {
   title: string
@@ -20,16 +21,16 @@ const fullTitle = isHome
 const description = pageDescription || config.site.description
 const socialImage = new URL(image || "/og-image.png", config.site.url)
 const canonicalURL = new URL(Astro.url.pathname, config.site.url)
-const envTarget = (import.meta.env.VITE_ENV || 'dev').toUpperCase()
-const titlePrefix = envTarget === "PRD" ? "" : `${envTarget}+`;
+
+const titlePrefix = isProductionEnv ? "" : `${envTarget.toUpperCase()}+`
 ---
 
 {/* Global Metadata */}
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 <meta name="author" content={config.site.author} />
+<meta name="theme-color" content="#FFFCF0" />
 
 {/* Canonical URL */}
 <link rel="canonical" href={canonicalURL} />
@@ -39,6 +40,13 @@ const titlePrefix = envTarget === "PRD" ? "" : `${envTarget}+`;
 <meta name="title" content={fullTitle} />
 <meta name="description" content={description} />
 <link rel="sitemap" href="/sitemap-index.xml" />
+
+{/* Robots Control (本番のみインデックスを許可) */}
+{isProductionEnv ? (
+  <meta name="robots" content="index, follow" />
+) : (
+  <meta name="robots" content="noindex, nofollow" />
+)}
 
 {/* Open Graph / Facebook */}
 <meta property="og:type" content="website" />
@@ -55,13 +63,13 @@ const titlePrefix = envTarget === "PRD" ? "" : `${envTarget}+`;
 <meta property="twitter:image" content={socialImage} />
 
 {/* Favicons */}
+<link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
 <link
   rel="icon"
   type="image/png"
   href="/favicons/favicon-96x96.png?v=20260714"
   sizes="96x96"
 />
-<link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg?v=20260714" />
 <link rel="shortcut icon" href="/favicons/favicon.ico?v=20260714" />
 <link
   rel="apple-touch-icon"
@@ -72,9 +80,6 @@ const titlePrefix = envTarget === "PRD" ? "" : `${envTarget}+`;
 {/* App */}
 <meta name="apple-mobile-web-app-title" content={siteName} />
 <link rel="manifest" href="/favicons/site.webmanifest?v=20260714" />
-
-{/* Optional */}
-<meta name="robots" content="noindex, nofollow" />
 
 {/* View Transition API */}
 <ClientRouter />

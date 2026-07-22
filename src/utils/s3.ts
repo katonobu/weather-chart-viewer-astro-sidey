@@ -1,8 +1,15 @@
 // src/utils/s3.ts
-// S3のバケットURL（環境に合わせて変更してください）
+
+// service/S3のバケットURL（環境に合わせて変更してください）
+const SERVICE_DOMAIN = "weatherchart.katonobu.click"
 const S3_DOMAIN = "d1xdqsn7je8bay.cloudfront.net"
+// const S3_DOMAIN = SERVICE_DOMAIN // 運用開始後こっちに切り替える
+
 const S3_PREFIX = "shared/services/weatherchart"
 const CONTENTS_FETCH_URL = `https://${S3_DOMAIN}/${S3_PREFIX}`;
+
+export const CONTENTS_FETCH_DOMAIN_URL = `https://${S3_DOMAIN}`;
+export const SERVICE_URL = `https://${SERVICE_DOMAIN}`
 
 let dirListCache:string[]|null = null
 let buildDirListCache:string[]|null = null

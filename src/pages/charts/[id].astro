@@ -11,11 +11,11 @@ export async function getStaticPaths() {
   const recentList = await getBuildDirList() as string[]
   const detail = await getDetailData(recentList[0])
   const fileNames = detail.files.map((file:any)=>(file.name.replace(/^\d{14}_/g, "").replace(/^rain_\d{14}_f00_a00_combined/g, "rain").split(".")[0]))
-  return fileNames.map((id:string) => ({ params: {id} }))
+  return fileNames.map((fileName:string) => ({ params: {id:`${recentList[0]}-${fileName}`} }))
 }
 
-const { id } = Astro.params;
-
+const { id } = Astro.params as { id: string };
+const fileName = id.split("-")[1]
 const recentList = await getBuildDirList() as string[]
 const details: Record<string, any> = {};
 for (const dir of recentList) {
@@ -24,7 +24,7 @@ for (const dir of recentList) {
 const targetDetails: any[] = []
 for (const dir of recentList) {
   for (const file of details[dir].files) {
-    if (file.name.includes(id)) {
+    if (file.name.includes(fileName)) {
       file.when = dir
       file.whenStr = `${dir.slice(0,4)}年${dir.slice(4,6)}月${dir.slice(6,8)}日 ${dir.slice(9,11)}時${dir.slice(11,13)}分 発表`
       targetDetails.push(file)
