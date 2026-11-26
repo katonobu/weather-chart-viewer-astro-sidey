@@ -78,6 +78,10 @@ type KaisetsuItem = {
 }
 
 export async function getKaisetsu(id: string): Promise<string[]> {
+  console.log("Running new getKaisetsu function for id:", id);
+  return []
+}
+export async function getKaisetsuOrg(id: string): Promise<string[]> {
   const response = await fetch(`${CONTENTS_FETCH_URL}/${id}/kaisetsu_tanki.json`);
   if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
   const data = await response.json()
