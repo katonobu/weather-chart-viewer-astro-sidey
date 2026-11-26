@@ -36,7 +36,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: katonobu/weather-chart-viewer-astro-sidey
-          ref: main
+#          ref: main
+          ref: ${{ github.ref_name }}
 
       - name: Build Astro
         run: |
