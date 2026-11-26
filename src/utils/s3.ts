@@ -78,20 +78,13 @@ type KaisetsuItem = {
 }
 
 export async function getKaisetsu(id: string): Promise<string[]> {
-  console.log("Running new getKaisetsu function for id:", id);
-  return []
-}
-export async function getKaisetsuOrg(id: string): Promise<string[]> {
   const response = await fetch(`${CONTENTS_FETCH_URL}/${id}/kaisetsu_tanki.json`);
   if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
   const data = await response.json()
-/*
   if (!Array.isArray(data)) {
     throw new Error(`Unexpected kaisetsu_tanki.json structure for ${id}`);
   }
-*/
   const tracks: string[] | PromiseLike<string[]> = []
-  /*
   try {
     const first = data[0] as KaisetsuItem | undefined;
     if (first && first?.name) {
@@ -124,7 +117,6 @@ export async function getKaisetsuOrg(id: string): Promise<string[]> {
   }  catch (error) {
     console.error(`Error processing kaisetsu_tanki.json for ${id}:`, error);
   }
-*/
   return tracks
 }
 
