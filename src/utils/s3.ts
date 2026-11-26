@@ -82,24 +82,38 @@ export async function getKaisetsu(id: string): Promise<string[]> {
   if (!response.ok) throw new Error(`Failed to fetch metadata for ${id}`);
   const data = await response.json()
 
+  if (!Array.isArray(data)) {
+    throw new Error(`Unexpected kaisetsu_tanki.json structure for ${id}`);
+  }
+
   const tracks = []
-  tracks.push([
-    data[0].name,
-    data[0].sentences[0]
-  ].join("\n"))
-  tracks.push(data[1].name)
+  const first = data[0] as KaisetsuItem | undefined;
+  if (first && first?.name) {
+    const lead = [first.name, first.sentences?.[0]].filter(Boolean).join("\n");
+    if (lead) tracks.push(lead);
+  }
   data[1].subsections.forEach((item:KaisetsuItem) => {
-    const texts = []
-    texts.push(item.name)
-    item.sentences.forEach((sentence:string) => texts.push(sentence))
-    tracks.push(texts.join("\n"))
+    if (!item?.name) {
+      console.log(`Missing name in kaisetsu_tanki.json for ${id}`);
+    } else {
+      const texts = []
+      texts.push(item.name)
+      item.sentences.forEach((sentence:string) => texts.push(sentence))
+      tracks.push(texts.join("\n"))
+    }
   })
-  tracks.push(data[2].name)
-  data[2].subsections.forEach((item:KaisetsuItem) => {
-    const texts =[]
-    texts.push(item.name)
-    item.sentences.forEach((sentence:string) => texts.push(sentence))
-    tracks.push(texts.join("\n"))
+  if (data[2] && data[2]?.name) {
+    tracks.push(data[2].name)
+  }
+  data[2]?.subsections.forEach((item:KaisetsuItem) => {
+    if (!item.name) {
+      console.log(`Missing name in kaisetsu_tanki.json for ${id}`);
+    } else {
+      const texts =[]
+      texts.push(item.name)
+      item.sentences.forEach((sentence:string) => texts.push(sentence))
+      tracks.push(texts.join("\n"))
+    }
   })
 
   return tracks
